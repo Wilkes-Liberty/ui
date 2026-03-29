@@ -41,7 +41,7 @@ This application serves as the primary frontend interface for WilkesLiberty's di
 1. **Clone and install dependencies:**
    ```bash
    git clone <repository-url>
-   cd frontend
+   cd ui
    npm install
    ```
 
@@ -123,7 +123,7 @@ npm run format:check # Check code formatting
 ### File Structure
 
 ```
-frontend/
+ui/
 ├── app/                    # Next.js App Router pages
 │   ├── [...slug]/         # Dynamic catch-all routes
 │   ├── api/               # API routes (draft, revalidate)
