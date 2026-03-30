@@ -7,10 +7,29 @@ import "@/styles/globals.css"
 
 export const metadata: Metadata = {
   title: {
-    default: "Next.js for Drupal",
-    template: "%s | Next.js for Drupal",
+    default: "Wilkes Liberty",
+    template: "%s | Wilkes Liberty",
   },
-  description: "A Next.js site powered by a Drupal backend.",
+  description:
+    "Wilkes Liberty — strategic consulting and advisory services helping organizations navigate complex challenges.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://wilkesliberty.com"
+  ),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "Wilkes Liberty",
+    title: "Wilkes Liberty",
+    description:
+      "Wilkes Liberty — strategic consulting and advisory services helping organizations navigate complex challenges.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wilkes Liberty",
+    description:
+      "Wilkes Liberty — strategic consulting and advisory services helping organizations navigate complex challenges.",
+  },
   icons: {
     icon: "/favicon.ico",
   },
