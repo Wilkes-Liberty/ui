@@ -4,7 +4,9 @@ import type { Metadata } from "next"
 import type { DrupalArticle } from "@/types"
 
 export const metadata: Metadata = {
-  description: "A Next.js site powered by a Drupal backend.",
+  title: "Latest Articles",
+  description:
+    "News, insights, and updates from Wilkes Liberty on strategy, consulting, and leadership.",
 }
 
 export default async function Home() {
