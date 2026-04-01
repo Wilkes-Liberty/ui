@@ -9,21 +9,33 @@ async function handler(request: NextRequest) {
 
   // Validate secret.
   if (secret !== process.env.DRUPAL_REVALIDATE_SECRET) {
+    console.warn("[revalidate] Rejected request: invalid secret")
     return new Response("Invalid secret.", { status: 401 })
   }
 
   // Either tags or path must be provided.
   if (!path && !tags) {
+    console.warn("[revalidate] Rejected request: missing path and tags")
     return new Response("Missing path or tags.", { status: 400 })
   }
 
   try {
-    path && revalidatePath(path)
-    tags?.split(",").forEach((tag) => revalidateTag(tag))
+    if (path) {
+      revalidatePath(path)
+      console.log(`[revalidate] Revalidated path: ${path}`)
+    }
+
+    if (tags) {
+      const tagList = tags.split(",")
+      tagList.forEach((tag) => revalidateTag(tag))
+      console.log(`[revalidate] Revalidated tags: ${tagList.join(", ")}`)
+    }
 
     return new Response("Revalidated.")
   } catch (error) {
-    return new Response((error as Error).message, { status: 500 })
+    const message = (error as Error).message
+    console.error(`[revalidate] Error: ${message}`)
+    return new Response(message, { status: 500 })
   }
 }
 
