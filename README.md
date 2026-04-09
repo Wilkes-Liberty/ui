@@ -106,16 +106,16 @@ Production Next.js runs in a Docker container on the Njalla VPS. The image is bu
 ```bash
 # Build is handled by the infra repo Dockerfile
 # The Docker image is built from ~/Repositories/ui as the build context
-# NEXT_PUBLIC_DRUPAL_BASE_URL points to the Mac Mini Drupal via Tailscale
+# NEXT_PUBLIC_DRUPAL_BASE_URL points to the on-prem server Drupal via Tailscale
 ```
 
-The production container communicates with Drupal over Tailscale (Mac Mini ↔ Njalla VPS mesh VPN).
+The production container communicates with Drupal over Tailscale (on-prem server ↔ Njalla VPS mesh VPN).
 
-### Staging (Mac Mini — Docker)
+### Staging (on-prem server — Docker)
 
-Staging Next.js runs on the Mac Mini at port `3010`. It's part of the staging Docker Compose stack (`~/nas_docker_staging/`) and communicates with the staging Drupal container on the same Docker network.
+Staging Next.js runs on the on-prem server at port `3010`. It's part of the staging Docker Compose stack (`~/nas_docker_staging/`) and communicates with the staging Drupal container on the same Docker network.
 
-### Development on Mac Mini
+### Development on on-prem server
 
 For testing with the full Docker stack:
 ```bash
@@ -126,7 +126,7 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ## Branch Strategy
 
 - `main` — production; deployed to Njalla VPS
-- `staging` — deployed to Mac Mini staging stack (port 3010)
+- `staging` — deployed to on-prem server staging stack (port 3010)
 - `feature/*` — feature branches; pull requests target `main`
 
 ## Code Standards
