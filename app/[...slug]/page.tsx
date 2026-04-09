@@ -70,14 +70,15 @@ type NodePageParams = {
   slug: string[]
 }
 type NodePageProps = {
-  params: NodePageParams
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<NodePageParams>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
-  { params: { slug } }: NodePageProps,
+  { params }: NodePageProps,
   _: ResolvingMetadata
 ): Promise<Metadata> {
+  const { slug } = await params
   let node
   try {
     node = await getNode(slug)
@@ -94,31 +95,38 @@ export async function generateMetadata(
 export async function generateStaticParams(): Promise<NodePageParams[]> {
   // Fetch the paths for the first 50 articles and pages.
   // We'll fall back to on-demand generation for the rest.
-  const data = await drupal.query<{
-    nodeArticles: NodesPath
-    nodePages: NodesPath
-  }>({
-    query: `query {
-      nodeArticles(first: 50) {
-        nodes {
-          path,
+  // During Docker builds Drupal is not running, so we catch and return []
+  // — all paths are rendered on-demand at runtime instead.
+  try {
+    const data = await drupal.query<{
+      nodeArticles: NodesPath
+      nodePages: NodesPath
+    }>({
+      query: `query {
+        nodeArticles(first: 50) {
+          nodes {
+            path,
+          }
         }
-      }
-      nodePages(first: 50) {
-        nodes {
-          path,
+        nodePages(first: 50) {
+          nodes {
+            path,
+          }
         }
-      }
-    }`,
-  })
+      }`,
+    })
 
-  return [
-    ...(data?.nodeArticles?.nodes as { path: string }[]),
-    ...(data?.nodePages?.nodes as { path: string }[]),
-  ].map(({ path }) => ({ slug: path.split("/").filter(Boolean) }))
+    return [
+      ...(data?.nodeArticles?.nodes as { path: string }[]),
+      ...(data?.nodePages?.nodes as { path: string }[]),
+    ].map(({ path }) => ({ slug: path.split("/").filter(Boolean) }))
+  } catch {
+    return []
+  }
 }
 
-export default async function Page({ params: { slug } }: NodePageProps) {
+export default async function Page({ params }: NodePageProps) {
+  const { slug } = await params
   const draft = await draftMode()
   const isDraftMode = draft.isEnabled
 
