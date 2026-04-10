@@ -6,6 +6,10 @@ import { drupal } from "@/lib/drupal"
 import type { Metadata, ResolvingMetadata } from "next"
 import type { DrupalArticle, DrupalPage, NodesPath } from "@/types"
 
+// All slugs are rendered on-demand — generateStaticParams returns [] at build
+// time since Drupal is not available, and dynamicParams defaults to true.
+export const dynamic = "force-dynamic"
+
 async function getNode(slug: string[]) {
   const path = `/${slug.join("/")}`
 
