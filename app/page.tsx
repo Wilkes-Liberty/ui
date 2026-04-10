@@ -3,6 +3,11 @@ import { drupal } from "@/lib/drupal"
 import type { Metadata } from "next"
 import type { DrupalArticle } from "@/types"
 
+// Always render server-side — this page fetches live Drupal content and
+// must not be statically pre-rendered at Docker build time when Drupal
+// is not available.
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: "Latest Articles",
   description:
