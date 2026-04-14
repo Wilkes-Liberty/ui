@@ -44,3 +44,40 @@ export type DrupalArticle = {
   }
   image: Image
 }
+
+// ── Paragraph types (subset used on the homepage) ───────────────────────────
+
+export type ParagraphHero = {
+  __typename: "ParagraphPHero"
+  heroTitle: string | null
+  subtitle: { processed: string } | null
+}
+
+export type ParagraphTextBlock = {
+  __typename: "ParagraphPTextBlock"
+  body: { processed: string } | null
+}
+
+export type ParagraphNotice = {
+  __typename: "ParagraphPNotice"
+  noticeTitle: string
+  noticeTone: "success" | "warning" | "info" | "danger"
+}
+
+export type ParagraphCtaBanner = {
+  __typename: "ParagraphPCtaBanner"
+  ctaLinks: Array<{ url: string; title: string | null }> | null
+}
+
+export type DrupalParagraph =
+  | ParagraphHero
+  | ParagraphTextBlock
+  | ParagraphNotice
+  | ParagraphCtaBanner
+
+export type DrupalLandingPage = {
+  __typename: "NodeLandingPage"
+  id: string
+  title: string
+  components: DrupalParagraph[]
+}
