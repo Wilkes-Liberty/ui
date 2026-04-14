@@ -8,20 +8,22 @@ type ServiceStatus = {
 }
 
 type StatusResponse = {
-  services: {
-    gateway: ServiceStatus
-    identity: ServiceStatus
-    api: ServiceStatus
-    data: ServiceStatus
-  }
+  services: Record<string, ServiceStatus>
   timestamp: string
 }
 
-const LABELS: Array<keyof StatusResponse["services"]> = [
-  "gateway",
-  "identity",
-  "api",
-  "data",
+// Order matters — left to right on screen.
+const LABELS: Array<[string, string]> = [
+  ["gateway", "Gateway"],
+  ["frontend", "Frontend"],
+  ["api", "API"],
+  ["identity", "Identity"],
+  ["data", "Data"],
+  ["cache", "Cache"],
+  ["search", "Search"],
+  ["mesh", "Mesh"],
+  ["monitoring", "Telemetry"],
+  ["storage", "Storage"],
 ]
 
 export function StatusIndicators() {
@@ -55,26 +57,23 @@ export function StatusIndicators() {
 
   return (
     <div className="status-bar">
-      {LABELS.map((key, idx) => {
+      {LABELS.map(([key, label], idx) => {
         const service = status?.services[key]
         const isUp = service?.up ?? false
         const isLoading = !status && !error
         return (
-          <div key={key} className="status-item-wrap">
-            <div className="status-item">
-              <div
-                className={`status-dot ${
-                  isLoading
-                    ? "status-dot-loading"
-                    : isUp
-                    ? "status-dot-up"
-                    : "status-dot-down"
-                }`}
-                style={{ animationDelay: `${idx * 0.7}s` }}
-              />
-              <span>{key}</span>
-            </div>
-            {idx < LABELS.length - 1 && <div className="status-sep" />}
+          <div key={key} className="status-item">
+            <div
+              className={`status-dot ${
+                isLoading
+                  ? "status-dot-loading"
+                  : isUp
+                  ? "status-dot-up"
+                  : "status-dot-down"
+              }`}
+              style={{ animationDelay: `${(idx * 0.4) % 4}s` }}
+            />
+            <span>{label}</span>
           </div>
         )
       })}

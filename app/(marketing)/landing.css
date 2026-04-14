@@ -242,39 +242,42 @@ body:has(.landing-shell) {
   animation: landing-fadeInSlow 2s ease-out 2s both;
 }
 
-/* Status indicators */
+/* Status indicators — NOC-style infrastructure dashboard along the bottom */
 .status-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 2.5rem;
-  padding: 1.2rem 2rem;
+  gap: 1.4rem 1.6rem;
+  padding: 1rem 2rem;
   z-index: 10;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
   animation: landing-fadeInSlow 2.5s ease-out 2.2s both;
-}
-.status-item-wrap {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
 }
 .status-item {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
 }
 .status-dot {
   width: 4px;
   height: 4px;
   border-radius: 50%;
   animation: landing-breathe 4s ease-in-out infinite;
+  flex-shrink: 0;
 }
 .status-dot-up {
   background: rgba(80, 200, 120, 0.6);
@@ -287,8 +290,19 @@ body:has(.landing-shell) {
 .status-dot-loading {
   background: rgba(255, 255, 255, 0.2);
 }
-.status-sep {
-  width: 1px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.04);
+
+/* Push the location footer up so it doesn't collide with the status bar */
+.landing-footer {
+  bottom: 4.5rem;
+}
+
+/* On narrow screens, status bar wraps to multiple rows; ensure footer clears it */
+@media (max-width: 700px) {
+  .status-bar {
+    gap: 1rem 1.2rem;
+    font-size: 0.5rem;
+  }
+  .landing-footer {
+    bottom: 7rem;
+  }
 }
