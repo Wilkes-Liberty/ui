@@ -1,4 +1,3 @@
-import { drupal } from "@/lib/drupal"
 import type { DrupalLandingPage } from "@/types"
 
 const HOMEPAGE_QUERY = `
@@ -8,7 +7,7 @@ const HOMEPAGE_QUERY = `
         __typename
         id
         title
-        components: components {
+        components {
           __typename
           ... on ParagraphPHero {
             heroTitle: title
@@ -33,26 +32,39 @@ const HOMEPAGE_QUERY = `
 /**
  * Fetch the homepage landing_page node from Drupal.
  *
- * Strategy:
- *   - Query for landing_pages (newest first), take the first one
- *   - The "Homepage" node is conventionally the only/newest landing page on
- *     the production site, but if multiple exist, the first match wins.
- *   - Returns null on any failure so the caller can render a fallback.
+ * We do a direct unauthenticated POST to /graphql rather than going through
+ * the NextDrupalGraphQL OAuth client because:
+ *   1. The Homepage is public, anonymous-readable content
+ *   2. OAuth credentials may not be set during build/SSG (NextDrupalBase
+ *      throws if base URL is missing, OAuth client requires creds)
+ *   3. This keeps the landing page's resilience guarantee — it should
+ *      render even if OAuth setup is incomplete
  *
- * For more deterministic selection, we could:
- *   - Query by path alias /homepage (route resolver)
- *   - Use site.page.front config + a `siteFront` GraphQL query
- *   - Hardcode a node ID in env (HOMEPAGE_NODE_ID)
+ * Returns null on any failure so the caller renders the hardcoded fallback.
  */
 export async function getHomepage(): Promise<DrupalLandingPage | null> {
-  if (!drupal) return null
+  const baseUrl =
+    process.env.NEXT_PUBLIC_DRUPAL_BASE_URL ?? process.env.DRUPAL_BASE_URL
+  if (!baseUrl) return null
+
   try {
-    const data = await drupal.query<{
-      nodeLandingPages: { nodes: DrupalLandingPage[] }
-    }>({
-      query: HOMEPAGE_QUERY,
+    const res = await fetch(`${baseUrl}/graphql`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: HOMEPAGE_QUERY }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
     })
-    return data?.nodeLandingPages?.nodes?.[0] ?? null
+    if (!res.ok) return null
+    const json = (await res.json()) as {
+      data?: { nodeLandingPages?: { nodes?: DrupalLandingPage[] } }
+      errors?: unknown
+    }
+    if (json.errors) {
+      console.error("Homepage GraphQL errors:", json.errors)
+      return null
+    }
+    return json.data?.nodeLandingPages?.nodes?.[0] ?? null
   } catch (err) {
     console.error("Failed to fetch homepage from Drupal:", err)
     return null
