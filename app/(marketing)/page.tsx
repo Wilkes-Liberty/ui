@@ -12,9 +12,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-// ISR — revalidate the cached page every 60s. Drupal can also trigger
-// on-demand revalidation via /api/revalidate when content changes.
-export const revalidate = 60
+// ISR backup — revalidate the cached page every 30s if Drupal hasn't
+// triggered an on-demand revalidation via /api/revalidate. The webhook
+// (configured in Drupal's next_entity_type_config) is the primary
+// refresh mechanism; this is a safety net for edge cases (webhook fails,
+// Drupal restarts mid-save, etc.).
+export const revalidate = 30
 
 // Hardcoded fallback shown when Drupal is unreachable. Mirrors the seed
 // content in webcms/scripts/setup_homepage.php so the visual stays identical.
