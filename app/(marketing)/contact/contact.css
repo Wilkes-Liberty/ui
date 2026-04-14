@@ -1,0 +1,180 @@
+/* Contact page — minimal dark form, same aesthetic as landing */
+
+.contact-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.contact-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  animation: landing-fadeIn 1.2s ease-out both;
+}
+.contact-content .landing-h1 {
+  margin-bottom: 0.6rem;
+}
+.contact-content .landing-sub {
+  margin-bottom: 2.5rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  text-align: left;
+  margin-top: 1rem;
+}
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+}
+@media (max-width: 600px) {
+  .contact-row { grid-template-columns: 1fr; }
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.contact-field span {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+.contact-field input,
+.contact-field textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.65rem 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.005em;
+  outline: none;
+  transition: border-color 0.3s ease;
+  border-radius: 0;
+}
+.contact-field input:focus,
+.contact-field textarea:focus {
+  border-bottom-color: rgba(255, 255, 255, 0.4);
+}
+.contact-field textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.15);
+}
+/* Honeypot — visually hidden, accessible-hidden */
+.contact-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.contact-submit {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+}
+.contact-submit:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.02);
+}
+.contact-submit:disabled {
+  opacity: 0.4;
+  cursor: progress;
+}
+
+.contact-error {
+  font-size: 0.75rem;
+  color: rgba(255, 120, 120, 0.8);
+  letter-spacing: 0.04em;
+  border-left: 2px solid rgba(255, 120, 120, 0.4);
+  padding-left: 0.75rem;
+  margin-top: -0.4rem;
+}
+
+.contact-success {
+  text-align: left;
+  padding: 1rem 0;
+  animation: landing-fadeIn 0.8s ease-out both;
+}
+.contact-success-mark {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(80, 200, 120, 0.8);
+  margin-bottom: 1rem;
+}
+.contact-success p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 1.5rem;
+}
+.contact-success em {
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.7);
+}
+.contact-link {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 0 2px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.contact-link:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.contact-footer {
+  margin-top: 3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.15);
+  text-align: center;
+}
+.contact-footer a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 2px;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.contact-footer a:hover {
+  color: rgba(255, 255, 255, 0.45);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+}
