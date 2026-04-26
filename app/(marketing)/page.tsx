@@ -56,9 +56,7 @@ export default async function LandingPage() {
 
   return (
     <>
-      <nav className="landing-nav">
-        <a href="https://api.wilkesliberty.com/user/login">Admin</a>
-      </nav>
+
       <div className="landing-grain" />
       <div className="landing-glow" />
       <div className="landing-line-l" />
