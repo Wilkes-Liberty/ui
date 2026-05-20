@@ -5,6 +5,7 @@ import { ProseBody } from "@/components/drupal/shared/ProseBody"
 import { RawHtml } from "@/components/drupal/shared/RawHtml"
 import { Section } from "@/components/drupal/shared/Section"
 import { CapabilityParagraph } from "@/components/drupal/paragraphs/CapabilityParagraph"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { DrupalProduct, ParagraphCapability } from "@/types"
 
 export function Product({ node }: { node: DrupalProduct }) {
@@ -14,7 +15,7 @@ export function Product({ node }: { node: DrupalProduct }) {
         eyebrow="Product"
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
       <MetadataChips label="Sectors" terms={node.targetSectors} />
       <MetadataChips label="Industries" terms={node.industries} />

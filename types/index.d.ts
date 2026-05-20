@@ -16,6 +16,15 @@ export type Image = {
   alt?: string | null
 }
 
+// graphql_compose returns image/document/etc. references as a MediaUnion.
+// Only MediaImage exposes a usable image payload; other variants are
+// represented as `__typename` alone so we can ignore them.
+export type DrupalMedia =
+  | { __typename: "MediaImage"; mediaImage: Image }
+  | { __typename: "MediaDocument" }
+  | { __typename: "MediaAudio" }
+  | { __typename: "MediaRemoteVideo" }
+
 export type Author = {
   name: string
 }
@@ -80,8 +89,8 @@ export type NodeCommonFields = {
   path: string
   body?: ProcessedText | null
   summary?: ProcessedText | null
-  heroImage?: Image | null
-  socialImage?: Image | null
+  heroImage?: DrupalMedia | null
+  socialImage?: DrupalMedia | null
   metaDescription?: string | null
   seoTitle?: string | null
   primaryCta?: Link | null
@@ -171,7 +180,7 @@ export type DrupalPerson = {
   showInDirectory?: boolean | null
   metaDescription?: string | null
   seoTitle?: string | null
-  socialImage?: Image | null
+  socialImage?: DrupalMedia | null
   summary?: ProcessedText | null
 }
 
@@ -216,7 +225,7 @@ export type ParagraphCapability = {
   capabilityTitle?: string | null
   capabilityDescription?: ProcessedText | null
   missionBenefit?: string | null
-  icon?: Image | null
+  icon?: DrupalMedia | null
 }
 
 export type ParagraphUseCase = {
@@ -239,7 +248,7 @@ export type ParagraphFeature = {
   __typename: "ParagraphPFeature"
   title?: string | null
   body?: ProcessedText | null
-  icon?: Image | null
+  icon?: DrupalMedia | null
 }
 
 export type ParagraphStat = {
@@ -259,18 +268,18 @@ export type ParagraphTextImage = {
   __typename: "ParagraphPTextImage"
   title?: string | null
   body?: ProcessedText | null
-  media?: Image | null
+  media?: DrupalMedia | null
 }
 
 export type ParagraphImageGallery = {
   __typename: "ParagraphPImageGallery"
   title?: string | null
-  galleryImages?: Image[] | null
+  galleryImages?: DrupalMedia[] | null
 }
 
 export type ParagraphLogoWall = {
   __typename: "ParagraphPLogoWall"
-  logos?: Image[] | null
+  logos?: DrupalMedia[] | null
 }
 
 export type ParagraphFaqItem = {

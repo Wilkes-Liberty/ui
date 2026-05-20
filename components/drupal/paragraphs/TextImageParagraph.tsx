@@ -1,10 +1,12 @@
 import Image from "next/image"
 import { RawHtml } from "@/components/drupal/shared/RawHtml"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { ParagraphTextImage } from "@/types"
 
 export function TextImageParagraph({ data }: { data: ParagraphTextImage }) {
   const body = data.body?.processed
-  if (!data.title && !body && !data.media?.url) return null
+  const media = mediaToImage(data.media)
+  if (!data.title && !body && !media?.url) return null
   return (
     <div className="my-8 grid gap-6 md:grid-cols-2 items-center">
       <div>
@@ -13,13 +15,13 @@ export function TextImageParagraph({ data }: { data: ParagraphTextImage }) {
         ) : null}
         <RawHtml html={body} className="prose max-w-none" />
       </div>
-      {data.media?.url ? (
+      {media?.url ? (
         <figure>
           <Image
-            src={data.media.url}
-            width={data.media.width || 640}
-            height={data.media.height || 480}
-            alt={data.media.alt ?? ""}
+            src={media.url}
+            width={media.width || 640}
+            height={media.height || 480}
+            alt={media.alt ?? ""}
             className="rounded-lg"
           />
         </figure>

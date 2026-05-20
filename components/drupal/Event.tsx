@@ -2,6 +2,7 @@ import { CtaLinks } from "@/components/drupal/shared/CtaLinks"
 import { NodeHero } from "@/components/drupal/shared/NodeHero"
 import { ProseBody } from "@/components/drupal/shared/ProseBody"
 import { Section } from "@/components/drupal/shared/Section"
+import { mediaToImage } from "@/lib/drupal-media"
 import { formatDate } from "@/lib/utils"
 import type { DrupalEvent } from "@/types"
 
@@ -34,7 +35,7 @@ export function Event({ node }: { node: DrupalEvent }) {
         eyebrow={eventTypeText ?? "Event"}
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
       {dateRange ? (
         <Section>

@@ -6,6 +6,7 @@ import { RawHtml } from "@/components/drupal/shared/RawHtml"
 import { Section } from "@/components/drupal/shared/Section"
 import { CapabilityParagraph } from "@/components/drupal/paragraphs/CapabilityParagraph"
 import { OutcomeParagraph } from "@/components/drupal/paragraphs/OutcomeParagraph"
+import { mediaToImage } from "@/lib/drupal-media"
 import type {
   DrupalSolution,
   ParagraphCapability,
@@ -19,7 +20,7 @@ export function Solution({ node }: { node: DrupalSolution }) {
         eyebrow="Solution"
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
       <MetadataChips label="Industries" terms={node.industries} />
 

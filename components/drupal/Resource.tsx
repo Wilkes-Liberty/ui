@@ -1,6 +1,7 @@
 import { CtaLinks } from "@/components/drupal/shared/CtaLinks"
 import { NodeHero } from "@/components/drupal/shared/NodeHero"
 import { ProseBody } from "@/components/drupal/shared/ProseBody"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { DrupalResource } from "@/types"
 
 function resourceTypeLabel(value: DrupalResource["resourceType"]): string | null {
@@ -19,7 +20,7 @@ export function Resource({ node }: { node: DrupalResource }) {
         eyebrow={resourceTypeText ?? "Resource"}
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
 
       <ProseBody body={node.body} />

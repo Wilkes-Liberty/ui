@@ -4,6 +4,7 @@ import { NodeHero } from "@/components/drupal/shared/NodeHero"
 import { ProseBody } from "@/components/drupal/shared/ProseBody"
 import { Section } from "@/components/drupal/shared/Section"
 import { OutcomeParagraph } from "@/components/drupal/paragraphs/OutcomeParagraph"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { DrupalCaseStudy, ParagraphOutcome } from "@/types"
 
 export function CaseStudy({ node }: { node: DrupalCaseStudy }) {
@@ -13,7 +14,7 @@ export function CaseStudy({ node }: { node: DrupalCaseStudy }) {
         eyebrow="Case study"
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
       <MetadataChips label="Industries" terms={node.industries} />
       <MetadataChips label="Target sectors" terms={node.targetSectors} />

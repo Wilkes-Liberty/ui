@@ -1,11 +1,16 @@
 import Image from "next/image"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { ParagraphLogoWall } from "@/types"
 
 export function LogoWallParagraph({ data }: { data: ParagraphLogoWall }) {
-  if (!data.logos?.length) return null
+  const logos =
+    data.logos
+      ?.map((m) => mediaToImage(m))
+      .filter((img): img is NonNullable<typeof img> => img !== null) ?? []
+  if (!logos.length) return null
   return (
     <div className="my-8 grid grid-cols-3 md:grid-cols-5 gap-6 items-center">
-      {data.logos.map((logo, i) =>
+      {logos.map((logo, i) =>
         logo?.url ? (
           <Image
             key={i}

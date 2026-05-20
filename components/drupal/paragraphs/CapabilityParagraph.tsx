@@ -1,19 +1,21 @@
 import Image from "next/image"
 import { RawHtml } from "@/components/drupal/shared/RawHtml"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { ParagraphCapability } from "@/types"
 
 export function CapabilityParagraph({ data }: { data: ParagraphCapability }) {
   const desc = data.capabilityDescription?.processed
+  const icon = mediaToImage(data.icon)
   if (!data.capabilityTitle && !desc && !data.missionBenefit) return null
   return (
     <li className="flex gap-4 py-4 border-b border-gray-100 list-none">
-      {data.icon?.url ? (
+      {icon?.url ? (
         <div className="shrink-0">
           <Image
-            src={data.icon.url}
+            src={icon.url}
             width={48}
             height={48}
-            alt={data.icon.alt ?? ""}
+            alt={icon.alt ?? ""}
           />
         </div>
       ) : null}

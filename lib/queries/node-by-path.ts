@@ -12,7 +12,10 @@ const PARAGRAPH_FRAGMENTS = `
     capabilityTitle
     capabilityDescription { processed }
     missionBenefit
-    icon { url width height alt }
+    icon {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphUseCase {
     useCaseTitle
@@ -29,7 +32,10 @@ const PARAGRAPH_FRAGMENTS = `
   ... on ParagraphPFeature {
     title
     body { processed }
-    icon { url width height alt }
+    icon {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPStat { title value suffix }
   ... on ParagraphPTestimonial {
@@ -39,14 +45,23 @@ const PARAGRAPH_FRAGMENTS = `
   ... on ParagraphPTextImage {
     title
     body { processed }
-    media { url width height alt }
+    media {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPImageGallery {
     title
-    galleryImages { url width height alt }
+    galleryImages {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPLogoWall {
-    logos { url width height alt }
+    logos {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPFaqGroup {
     title
@@ -67,8 +82,14 @@ const COMMON_NODE_FIELDS = `
   metaDescription
   seoTitle
   breadcrumbLabel
-  heroImage { url width height alt }
-  socialImage { url width height alt }
+  heroImage {
+    __typename
+    ... on MediaImage { mediaImage { url width height alt } }
+  }
+  socialImage {
+    __typename
+    ... on MediaImage { mediaImage { url width height alt } }
+  }
   primaryCta { url title }
   secondaryCta { url title }
   industries { ... on TermInterface { name } }
@@ -147,7 +168,10 @@ const NODE_BY_PATH_QUERY = `
             summary { processed }
             metaDescription
             seoTitle
-            heroImage { url width height alt }
+            heroImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
             primaryCta { url title }
             secondaryCta { url title }
             applyUrl { url title }
@@ -175,7 +199,10 @@ const NODE_BY_PATH_QUERY = `
             showInDirectory
             metaDescription
             seoTitle
-            socialImage { url width height alt }
+            socialImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
             summary { processed }
           }
         }
