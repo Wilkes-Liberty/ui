@@ -16,7 +16,7 @@ const PARAGRAPH_FRAGMENTS = `
   }
   ... on ParagraphUseCase {
     useCaseTitle
-    sector { name }
+    sector { ... on TermInterface { name } }
     challenge { processed }
     solution { processed }
     results { processed }
@@ -71,8 +71,8 @@ const COMMON_NODE_FIELDS = `
   socialImage { url width height alt }
   primaryCta { url title }
   secondaryCta { url title }
-  industries { name }
-  personas { name }
+  industries { ... on TermInterface { name } }
+  personas { ... on TermInterface { name } }
 `
 
 const NODE_BY_PATH_QUERY = `
@@ -109,7 +109,7 @@ const NODE_BY_PATH_QUERY = `
             defenseRelevance { processed }
             sovereigntyFeatures { processed }
             deploymentOptions
-            targetSectors { name }
+            targetSectors { ... on TermInterface { name } }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeService {
@@ -126,18 +126,18 @@ const NODE_BY_PATH_QUERY = `
           }
           ... on NodeCaseStudy {
             ${COMMON_NODE_FIELDS}
-            targetSectors { name }
+            targetSectors { ... on TermInterface { name } }
             outcomes { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeResource {
             ${COMMON_NODE_FIELDS}
-            resourceType { name }
+            resourceType { ... on TermInterface { name } }
             externalUrl { url title }
           }
           ... on NodeEvent {
             ${COMMON_NODE_FIELDS}
             eventDate { value endValue timezone }
-            eventType { name }
+            eventType { ... on TermInterface { name } }
           }
           ... on NodeCareer {
             id
@@ -154,8 +154,8 @@ const NODE_BY_PATH_QUERY = `
             applyUrl { url title }
             jobLocation
             jobType
-            department { name }
-            seniority { name }
+            department { ... on TermInterface { name } }
+            seniority { ... on TermInterface { name } }
             remotePolicy
             clearanceLevel
             veteranFriendly
@@ -168,8 +168,8 @@ const NODE_BY_PATH_QUERY = `
             bio { processed }
             jobTitle
             photo { url width height alt }
-            department { name }
-            expertise { name }
+            department { ... on TermInterface { name } }
+            expertise { ... on TermInterface { name } }
             linkedin { url title }
             github { url title }
             website { url title }
