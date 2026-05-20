@@ -1,74 +1,14 @@
 import { draftMode } from "next/headers"
 import { notFound } from "next/navigation"
-import { Article } from "@/components/drupal/Article"
-import { BasicPage } from "@/components/drupal/BasicPage"
+import { NodeRenderer } from "@/components/drupal/NodeRenderer"
+import { getNodeByPath } from "@/lib/queries/node-by-path"
 import { drupal } from "@/lib/drupal"
 import type { Metadata, ResolvingMetadata } from "next"
-import type { DrupalArticle, DrupalPage, NodesPath } from "@/types"
+import type { DrupalNode, NodesPath } from "@/types"
 
 // All slugs are rendered on-demand — generateStaticParams returns [] at build
 // time since Drupal is not available, and dynamicParams defaults to true.
 export const dynamic = "force-dynamic"
-
-async function getNode(slug: string[]) {
-  const path = `/${slug.join("/")}`
-
-  const data = await drupal.query<{
-    route: { entity: DrupalArticle | DrupalPage }
-  }>({
-    query: `query ($path: String!){
-      route(path: $path) {
-        ... on RouteInternal {
-          entity {
-            ... on NodeArticle {
-              __typename
-              id
-              title
-              path
-              author {
-                name
-              }
-              body {
-                processed
-              }
-              status
-              created {
-                time
-              }
-              image {
-                width
-                url
-                height
-              }
-            }
-            ... on NodePage {
-              __typename
-              id
-              title
-              path
-              body {
-                processed
-              }
-            }
-          }
-        }
-      }
-    }`,
-    variables: {
-      path,
-    },
-  })
-
-  const resource = data?.route?.entity
-
-  if (!resource) {
-    throw new Error(`Failed to fetch resource: ${path}`, {
-      cause: "DrupalError",
-    })
-  }
-
-  return resource
-}
 
 type NodePageParams = {
   slug: string[]
@@ -78,21 +18,32 @@ type NodePageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
+function metaDescriptionFor(node: DrupalNode): string | undefined {
+  if ("metaDescription" in node && node.metaDescription) {
+    return node.metaDescription
+  }
+  if ("summary" in node && node.summary?.processed) {
+    // Strip tags for a meta-description-safe string.
+    return node.summary.processed.replace(/<[^>]+>/g, "").trim().slice(0, 300)
+  }
+  return undefined
+}
+
+function titleFor(node: DrupalNode): string {
+  if ("seoTitle" in node && node.seoTitle) return node.seoTitle
+  return node.title
+}
+
 export async function generateMetadata(
   { params }: NodePageProps,
   _: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params
-  let node
-  try {
-    node = await getNode(slug)
-  } catch (e) {
-    // If we fail to fetch the node, don't return any metadata.
-    return {}
-  }
-
+  const node = await getNodeByPath(slug)
+  if (!node) return {}
   return {
-    title: node.title,
+    title: titleFor(node),
+    description: metaDescriptionFor(node),
   }
 }
 
@@ -107,16 +58,8 @@ export async function generateStaticParams(): Promise<NodePageParams[]> {
       nodePages: NodesPath
     }>({
       query: `query {
-        nodeArticles(first: 50) {
-          nodes {
-            path,
-          }
-        }
-        nodePages(first: 50) {
-          nodes {
-            path,
-          }
-        }
+        nodeArticles(first: 50) { nodes { path } }
+        nodePages(first: 50) { nodes { path } }
       }`,
     })
 
@@ -134,23 +77,15 @@ export default async function Page({ params }: NodePageProps) {
   const draft = await draftMode()
   const isDraftMode = draft.isEnabled
 
-  let node
-  try {
-    node = await getNode(slug)
-  } catch (error) {
-    // If getNode throws an error, tell Next.js the path is 404.
+  const node = await getNodeByPath(slug)
+  if (!node) {
     notFound()
   }
 
   // If we're not in draft mode and the resource is not published, return a 404.
-  if (!isDraftMode && node?.status === false) {
+  if (!isDraftMode && node.status === false) {
     notFound()
   }
 
-  return (
-    <>
-      {node.__typename === "NodePage" && <BasicPage node={node} />}
-      {node.__typename === "NodeArticle" && <Article node={node} />}
-    </>
-  )
+  return <NodeRenderer node={node} />
 }
