@@ -127,7 +127,6 @@ export type DrupalCaseStudy = NodeCommonFields & {
 export type DrupalResource = NodeCommonFields & {
   __typename: "NodeResource"
   resourceType?: TaxonomyTermRef | string | null
-  externalUrl?: Link | null
 }
 
 export type SmartDate = {

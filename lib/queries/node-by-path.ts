@@ -132,7 +132,6 @@ const NODE_BY_PATH_QUERY = `
           ... on NodeResource {
             ${COMMON_NODE_FIELDS}
             resourceType { ... on TermInterface { name } }
-            externalUrl { url title }
           }
           ... on NodeEvent {
             ${COMMON_NODE_FIELDS}
