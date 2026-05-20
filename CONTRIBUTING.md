@@ -1,6 +1,10 @@
 # Contributing to ui (Next.js Frontend)
 
-This guide covers local development setup, the day-to-day workflow, and how changes reach production. For how this repo fits into the broader stack, see [`ENVIRONMENT_OVERVIEW.md`](../infra/ENVIRONMENT_OVERVIEW.md) in the `infra` repo.
+This guide covers local development setup, the day-to-day workflow, and how changes reach production.
+
+**Authoritative guidance**: See [AGENTS.md](AGENTS.md) (this repo) and the root [../AGENTS.md](../AGENTS.md) for the full platform picture, auth gotchas, and deployment.
+
+For environment relationships, see [`ENVIRONMENT_OVERVIEW.md`](../infra/ENVIRONMENT_OVERVIEW.md) in the `infra` repo.
 
 ---
 

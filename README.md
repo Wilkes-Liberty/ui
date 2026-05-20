@@ -7,6 +7,12 @@
 
 Next.js 15 frontend for [wilkesliberty.com](https://wilkesliberty.com), consuming content from a headless Drupal 11 CMS via JSON:API and GraphQL.
 
+> **For frontend developers and agents**: See [AGENTS.md](AGENTS.md) and the root [../AGENTS.md](../AGENTS.md) for cross-repo context, environment variables, and production flow.
+
+**Current focus**: Stable consumption of the Drupal GraphQL schema and preparation for any preview/revalidation changes coming from the Keycloak + Next.js integration work.
+
+**New contributors**: Start with [docs/DEVELOPER_SETUP.md](docs/DEVELOPER_SETUP.md).
+
 ## Tech Stack
 
 | Component | Version | Role |
