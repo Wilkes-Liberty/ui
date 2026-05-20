@@ -156,7 +156,8 @@ const NODE_BY_PATH_QUERY = `
           }
           ... on NodeEvent {
             ${COMMON_NODE_FIELDS}
-            eventDate { value endValue timezone }
+            # TODO(webcms): expose the smart_date field on NodeEvent via
+            # graphql_compose. The schema currently has no eventDate field.
             eventType { ... on TermInterface { name } }
           }
           ... on NodeCareer {

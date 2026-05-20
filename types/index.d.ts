@@ -138,16 +138,10 @@ export type DrupalResource = NodeCommonFields & {
   resourceType?: TaxonomyTermRef | string | null
 }
 
-export type SmartDate = {
-  value?: string | null
-  endValue?: string | null
-  timezone?: string | null
-  rrule?: number | null
-}
-
+// TODO(webcms): NodeEvent's smart_date field is not exposed by
+// graphql_compose. Restore SmartDate + eventDate once the field is wired.
 export type DrupalEvent = NodeCommonFields & {
   __typename: "NodeEvent"
-  eventDate?: SmartDate | null
   eventType?: TaxonomyTermRef | string | null
 }
 
