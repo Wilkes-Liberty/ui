@@ -111,9 +111,9 @@ const NODE_BY_PATH_QUERY = `
             body { processed }
             created { time }
             image { url width height alt }
-            summary { processed }
-            metaDescription
-            seoTitle
+            # TODO(webcms): NodeArticle does not expose summary,
+            # metaDescription, or seoTitle via graphql_compose. Restore
+            # selections once the schema gap is closed.
           }
           ... on NodePage {
             id

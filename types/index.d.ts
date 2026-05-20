@@ -63,6 +63,9 @@ export type DrupalPage = {
   seoTitle?: string | null
 }
 
+// TODO(webcms): NodeArticle does not expose summary, metaDescription,
+// or seoTitle via graphql_compose. Add them back once the schema gap is
+// closed.
 export type DrupalArticle = {
   __typename: "NodeArticle"
   id: string
@@ -75,9 +78,6 @@ export type DrupalArticle = {
     time: string
   }
   image?: Image | null
-  summary?: ProcessedText | null
-  metaDescription?: string | null
-  seoTitle?: string | null
 }
 
 // ── Node types — new (8 unwired) ────────────────────────────────────────────
