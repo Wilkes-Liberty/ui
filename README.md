@@ -131,9 +131,18 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 ## Branch Strategy
 
-- `main` — production; deployed to Njalla VPS
-- `staging` — deployed to on-prem server staging stack (port 3010)
-- `feature/*` — feature branches; pull requests target `main`
+Three branches, kept in lockstep automatically by
+[`.github/workflows/sync-branches.yml`](.github/workflows/sync-branches.yml):
+
+- `master` — production-ready code. Feature/fix PRs target this branch.
+  Production Next.js on the Njalla VPS is rebuilt from `master` via the
+  `infra` repo's `make vps` (and the future VPS deploy workflow).
+- `staging` — auto-synced from `master` on every push. The push triggers
+  `infra/deploy-staging.yml`, which rebuilds the staging Next.js
+  container on the on-prem server (port 3010).
+- `development` — auto-synced from `master` on every push. No deploy;
+  WIP integration baseline (run locally against a DDEV Drupal).
+- `feature/*` — feature branches; pull requests target `master`.
 
 ## Code Standards
 

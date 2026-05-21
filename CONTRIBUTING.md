@@ -81,13 +81,18 @@ npm run format:check  # Prettier (check only, no changes)
 ## Branch and PR Process
 
 ```
-master ← staging ← feature/your-feature
+feature/your-feature ──PR──▶ master
+
+On every push to master, .github/workflows/sync-branches.yml runs and
+fast-forwards master into both companion branches:
+  ├─▶ staging      (triggers infra's deploy-staging.yml)
+  └─▶ development  (no deploy; WIP integration baseline)
 ```
 
-1. **Branch from `staging`**, not `master`:
+1. **Branch from `master`**:
    ```bash
-   git checkout staging
-   git pull origin staging
+   git checkout master
+   git pull origin master
    git checkout -b feature/your-feature-name
    ```
 
@@ -99,14 +104,17 @@ master ← staging ← feature/your-feature
    npm run format:check
    ```
 
-4. **Open a PR against `staging`**. Include:
+4. **Open a PR against `master`**. Include:
    - What changed and why
    - Any Drupal API changes this depends on (content type changes, new fields, GraphQL schema updates)
    - Screenshots for UI changes
 
-5. **After staging review and merge**, a team lead will promote `staging → master` when ready for production.
+5. **After review and merge**, `sync-branches.yml` fast-forwards `master`
+   into `staging` and `development` automatically. The staging push
+   triggers the staging deploy in the `infra` repo. Production deploy is
+   manual (`workflow_dispatch` on `infra/deploy-production.yml`).
 
-**Never push directly to `staging` or `master`.**
+**Never push directly to `staging`, `development`, or `master`.**
 
 Branch naming:
 - `feature/add-article-listing`
@@ -178,26 +186,25 @@ Ask the team lead for staging OAuth credentials.
 | Stage | What happens | Who does it |
 |-------|-------------|-------------|
 | Feature branch | Local `npm run dev` | Developer |
-| PR → staging | Code review, merge | Team lead |
-| Staging deploy | Rebuild staging Docker image on on-prem | DevOps |
+| PR → master | Code review, merge | Reviewer |
+| Auto-sync to staging | `sync-branches.yml` FF-pushes `master` → `staging` | GH Actions (automatic) |
+| Staging deploy | `infra/deploy-staging.yml` rebuilds staging Docker stack | GH Actions (automatic) |
 | QA on staging | Test on `https://stg.int.wilkesliberty.com` (Tailscale) | Developer + QA |
-| PR staging → master | Final review | Team lead |
-| Production deploy | Rebuild + redeploy on cloud VPS | DevOps |
+| Production deploy | Click **Run workflow** on `infra/deploy-production.yml` | Operator (manual) |
+| VPS Next.js redeploy | Operator runs `make vps` in the `infra` repo | Operator (manual until automated) |
 
-### What the production deploy looks like (on the cloud VPS)
+### What the production deploy looks like
 
-Next.js runs on the cloud VPS (not on-prem). After merging to `master`, the deploy is:
+Production Next.js runs on the cloud VPS. The Drupal-side production
+deploy is automated via `infra/deploy-production.yml` on
+`workflow_dispatch`. The Next.js redeploy on the VPS is currently still
+operator-driven via `make vps` (`infra/ansible/playbooks/vps.yml`):
 
 ```bash
-# On the cloud VPS
-cd ~/ui
-git pull origin master
-npm install
-npm run build
-pm2 restart nextjs   # or equivalent process manager restart
+# On the operator workstation, after PR merge to master:
+cd ~/Repositories/infra
+make vps   # rebuilds Next.js from current master and syncs to the VPS
 ```
-
-Until CI/CD is in place, this is done manually by the team lead after merging to `master`.
 
 ---
 
