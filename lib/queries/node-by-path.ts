@@ -118,12 +118,33 @@ const NODE_BY_PATH_QUERY = `
             breadcrumbLabel
           }
           ... on NodeBasicPage {
-            ${COMMON_NODE_FIELDS}
+            id
+            status
+            title
+            path
+            body { processed }
+            summary { processed }
+            metaDescription
+            seoTitle
+            breadcrumbLabel
+            heroImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
+            socialImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
+            primaryCta { url title }
+            secondaryCta { url title }
           }
           ... on NodeProduct {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
-            missionImpact { processed }
+            # TODO(webcms): NodeProduct.missionImpact is Text! while
+            # NodeService/NodeSolution.missionImpact is Text. Aliased here to
+            # avoid the field-merge conflict until the bundles agree.
+            productMissionImpact: missionImpact { processed }
             defenseRelevance { processed }
             sovereigntyFeatures { processed }
             deploymentOptions
@@ -159,8 +180,8 @@ const NODE_BY_PATH_QUERY = `
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
             eventDate {
-              value
-              endValue
+              value { time }
+              endValue { time }
               duration
               timezone
               rrule

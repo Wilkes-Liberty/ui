@@ -97,7 +97,8 @@ export type DrupalPage = NodeCommonFields & {
 
 export type DrupalProduct = NodeCommonFields & {
   __typename: "NodeProduct"
-  missionImpact?: ProcessedText | null
+  // Aliased from missionImpact — see node-by-path.ts TODO(webcms).
+  productMissionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
   deploymentOptions?: string[] | null
@@ -132,9 +133,13 @@ export type DrupalResource = NodeCommonFields & {
   resourceType?: TaxonomyTermRef | string | null
 }
 
+// DateTime is an OBJECT type in graphql_compose; we only select { time }
+// (ISO 8601 string). Sub-selection is required even when the value is null.
+export type DateTimeRef = { time: string } | null
+
 export type SmartDate = {
-  value: string | null
-  endValue: string | null
+  value: DateTimeRef
+  endValue: DateTimeRef
   duration: number | null
   timezone: string | null
   rrule: number | null

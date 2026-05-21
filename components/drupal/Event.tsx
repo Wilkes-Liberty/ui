@@ -13,10 +13,12 @@ function eventTypeLabel(value: DrupalEvent["eventType"]): string | null {
 }
 
 function eventDateRange(eventDate: DrupalEvent["eventDate"]): string | null {
-  if (!eventDate?.value) return null
-  const start = formatDate(eventDate.value)
-  if (!eventDate.endValue) return start
-  const end = formatDate(eventDate.endValue)
+  const startIso = eventDate?.value?.time
+  if (!startIso) return null
+  const start = formatDate(startIso)
+  const endIso = eventDate?.endValue?.time
+  if (!endIso) return start
+  const end = formatDate(endIso)
   return start === end ? start : `${start} – ${end}`
 }
 
