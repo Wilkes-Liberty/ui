@@ -5,6 +5,7 @@ import { ProseBody } from "@/components/drupal/shared/ProseBody"
 import { RawHtml } from "@/components/drupal/shared/RawHtml"
 import { Section } from "@/components/drupal/shared/Section"
 import { CapabilityParagraph } from "@/components/drupal/paragraphs/CapabilityParagraph"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { DrupalService, ParagraphCapability } from "@/types"
 
 export function Service({ node }: { node: DrupalService }) {
@@ -14,18 +15,9 @@ export function Service({ node }: { node: DrupalService }) {
         eyebrow="Service"
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
       <MetadataChips label="Industries" terms={node.industries} />
-
-      {node.missionImpact?.processed ? (
-        <Section title="Mission impact">
-          <RawHtml
-            html={node.missionImpact.processed}
-            className="prose max-w-none text-lg"
-          />
-        </Section>
-      ) : null}
 
       <ProseBody body={node.body} />
 

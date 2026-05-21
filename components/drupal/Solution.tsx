@@ -2,10 +2,10 @@ import { CtaLinks } from "@/components/drupal/shared/CtaLinks"
 import { MetadataChips } from "@/components/drupal/shared/MetadataChips"
 import { NodeHero } from "@/components/drupal/shared/NodeHero"
 import { ProseBody } from "@/components/drupal/shared/ProseBody"
-import { RawHtml } from "@/components/drupal/shared/RawHtml"
 import { Section } from "@/components/drupal/shared/Section"
 import { CapabilityParagraph } from "@/components/drupal/paragraphs/CapabilityParagraph"
 import { OutcomeParagraph } from "@/components/drupal/paragraphs/OutcomeParagraph"
+import { mediaToImage } from "@/lib/drupal-media"
 import type {
   DrupalSolution,
   ParagraphCapability,
@@ -19,18 +19,9 @@ export function Solution({ node }: { node: DrupalSolution }) {
         eyebrow="Solution"
         title={node.title}
         summary={node.summary}
-        heroImage={node.heroImage}
+        heroImage={mediaToImage(node.heroImage)}
       />
       <MetadataChips label="Industries" terms={node.industries} />
-
-      {node.missionImpact?.processed ? (
-        <Section title="Mission impact">
-          <RawHtml
-            html={node.missionImpact.processed}
-            className="prose max-w-none text-lg"
-          />
-        </Section>
-      ) : null}
 
       <ProseBody body={node.body} />
 

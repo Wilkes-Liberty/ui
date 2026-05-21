@@ -12,7 +12,10 @@ const PARAGRAPH_FRAGMENTS = `
     capabilityTitle
     capabilityDescription { processed }
     missionBenefit
-    icon { url width height alt }
+    icon {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphUseCase {
     useCaseTitle
@@ -29,7 +32,10 @@ const PARAGRAPH_FRAGMENTS = `
   ... on ParagraphPFeature {
     title
     body { processed }
-    icon { url width height alt }
+    icon {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPStat { title value suffix }
   ... on ParagraphPTestimonial {
@@ -39,14 +45,23 @@ const PARAGRAPH_FRAGMENTS = `
   ... on ParagraphPTextImage {
     title
     body { processed }
-    media { url width height alt }
+    media {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPImageGallery {
     title
-    galleryImages { url width height alt }
+    galleryImages {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPLogoWall {
-    logos { url width height alt }
+    logos {
+      __typename
+      ... on MediaImage { mediaImage { url width height alt } }
+    }
   }
   ... on ParagraphPFaqGroup {
     title
@@ -57,6 +72,8 @@ const PARAGRAPH_FRAGMENTS = `
   }
 `
 
+// NodeCaseStudy lacks `personas` in graphql_compose, so personas is added
+// per-bundle below rather than baked into COMMON_NODE_FIELDS.
 const COMMON_NODE_FIELDS = `
   id
   status
@@ -67,13 +84,20 @@ const COMMON_NODE_FIELDS = `
   metaDescription
   seoTitle
   breadcrumbLabel
-  heroImage { url width height alt }
-  socialImage { url width height alt }
+  heroImage {
+    __typename
+    ... on MediaImage { mediaImage { url width height alt } }
+  }
+  socialImage {
+    __typename
+    ... on MediaImage { mediaImage { url width height alt } }
+  }
   primaryCta { url title }
   secondaryCta { url title }
   industries { ... on TermInterface { name } }
-  personas { ... on TermInterface { name } }
 `
+
+const PERSONAS_FIELD = `personas { ... on TermInterface { name } }`
 
 const NODE_BY_PATH_QUERY = `
   query NodeByPath($path: String!) {
@@ -90,37 +114,39 @@ const NODE_BY_PATH_QUERY = `
             body { processed }
             created { time }
             image { url width height alt }
-            summary { processed }
-            metaDescription
-            seoTitle
+            # TODO(webcms): NodeArticle does not expose summary,
+            # metaDescription, or seoTitle via graphql_compose. Restore
+            # selections once the schema gap is closed.
           }
-          ... on NodePage {
-            id
-            status
-            title
-            path
-            body { processed }
-            metaDescription
-            seoTitle
-          }
+          # TODO(webcms): basic_page (NodeBasicPage) is not exposed by
+          # graphql_compose, so we cannot render basic pages here.
           ... on NodeProduct {
             ${COMMON_NODE_FIELDS}
+            ${PERSONAS_FIELD}
             missionImpact { processed }
             defenseRelevance { processed }
             sovereigntyFeatures { processed }
             deploymentOptions
             targetSectors { ... on TermInterface { name } }
-            keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
+            # TODO(webcms): NodeProduct.keyCapabilities is [ParagraphUnion!]!
+            # but Service/Solution have [ParagraphUnion!]. Aliased here to
+            # avoid the field-merge conflict until the bundles agree.
+            productCapabilities: keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeService {
             ${COMMON_NODE_FIELDS}
-            missionImpact { processed }
+            ${PERSONAS_FIELD}
+            # TODO(webcms): missionImpact is declared NON_NULL in the
+            # schema but the DB allows null, causing the resolver to
+            # throw Internal server error. Drop until the schema or data
+            # is reconciled.
             defenseRelevance { processed }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeSolution {
             ${COMMON_NODE_FIELDS}
-            missionImpact { processed }
+            ${PERSONAS_FIELD}
+            # TODO(webcms): see NodeService missionImpact note above.
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
             outcomes { ${PARAGRAPH_FRAGMENTS} }
           }
@@ -131,11 +157,14 @@ const NODE_BY_PATH_QUERY = `
           }
           ... on NodeResource {
             ${COMMON_NODE_FIELDS}
+            ${PERSONAS_FIELD}
             resourceType { ... on TermInterface { name } }
           }
           ... on NodeEvent {
             ${COMMON_NODE_FIELDS}
-            eventDate { value endValue timezone }
+            ${PERSONAS_FIELD}
+            # TODO(webcms): expose the smart_date field on NodeEvent via
+            # graphql_compose. The schema currently has no eventDate field.
             eventType { ... on TermInterface { name } }
           }
           ... on NodeCareer {
@@ -147,7 +176,10 @@ const NODE_BY_PATH_QUERY = `
             summary { processed }
             metaDescription
             seoTitle
-            heroImage { url width height alt }
+            heroImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
             primaryCta { url title }
             secondaryCta { url title }
             applyUrl { url title }
@@ -175,7 +207,10 @@ const NODE_BY_PATH_QUERY = `
             showInDirectory
             metaDescription
             seoTitle
-            socialImage { url width height alt }
+            socialImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
             summary { processed }
           }
         }

@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { mediaToImage } from "@/lib/drupal-media"
 import type { ParagraphImageGallery } from "@/types"
 
 export function ImageGalleryParagraph({
@@ -6,14 +7,18 @@ export function ImageGalleryParagraph({
 }: {
   data: ParagraphImageGallery
 }) {
-  if (!data.galleryImages?.length) return null
+  const images =
+    data.galleryImages
+      ?.map((m) => mediaToImage(m))
+      .filter((img): img is NonNullable<typeof img> => img !== null) ?? []
+  if (!images.length) return null
   return (
     <section className="my-8">
       {data.title ? (
         <h3 className="mb-4 text-2xl font-bold">{data.title}</h3>
       ) : null}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {data.galleryImages.map((img, i) =>
+        {images.map((img, i) =>
           img?.url ? (
             <figure key={i}>
               <Image

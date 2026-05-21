@@ -12,7 +12,7 @@ export type ListingResult = {
 }
 
 // One bundle == one root GraphQL field. graphql_compose pluralizes the
-// bundle name to camelCase (e.g. node `product` → `nodeProducts`).
+// bundle name to camelCase, with one exception: person → nodePeople.
 const ROOT_FIELDS = {
   product: "nodeProducts",
   service: "nodeServices",
@@ -21,7 +21,7 @@ const ROOT_FIELDS = {
   resource: "nodeResources",
   event: "nodeEvents",
   career: "nodeCareers",
-  person: "nodePersons",
+  person: "nodePeople",
 } as const
 
 export type ListingBundle = keyof typeof ROOT_FIELDS

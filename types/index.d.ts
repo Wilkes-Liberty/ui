@@ -16,6 +16,15 @@ export type Image = {
   alt?: string | null
 }
 
+// graphql_compose returns image/document/etc. references as a MediaUnion.
+// Only MediaImage exposes a usable image payload; other variants are
+// represented as `__typename` alone so we can ignore them.
+export type DrupalMedia =
+  | { __typename: "MediaImage"; mediaImage: Image }
+  | { __typename: "MediaDocument" }
+  | { __typename: "MediaAudio" }
+  | { __typename: "MediaRemoteVideo" }
+
 export type Author = {
   name: string
 }
@@ -43,17 +52,12 @@ export type RelatedNode = {
 
 // ── Node types — existing ───────────────────────────────────────────────────
 
-export type DrupalPage = {
-  __typename: "NodePage"
-  id: string
-  status: boolean
-  title: string
-  path: string
-  body?: ProcessedText | null
-  metaDescription?: string | null
-  seoTitle?: string | null
-}
+// TODO(webcms): NodeBasicPage (basic_page bundle) is not exposed by
+// graphql_compose. Restore DrupalPage once the schema gap is closed.
 
+// TODO(webcms): NodeArticle does not expose summary, metaDescription,
+// or seoTitle via graphql_compose. Add them back once the schema gap is
+// closed.
 export type DrupalArticle = {
   __typename: "NodeArticle"
   id: string
@@ -66,9 +70,6 @@ export type DrupalArticle = {
     time: string
   }
   image?: Image | null
-  summary?: ProcessedText | null
-  metaDescription?: string | null
-  seoTitle?: string | null
 }
 
 // ── Node types — new (8 unwired) ────────────────────────────────────────────
@@ -80,8 +81,8 @@ export type NodeCommonFields = {
   path: string
   body?: ProcessedText | null
   summary?: ProcessedText | null
-  heroImage?: Image | null
-  socialImage?: Image | null
+  heroImage?: DrupalMedia | null
+  socialImage?: DrupalMedia | null
   metaDescription?: string | null
   seoTitle?: string | null
   primaryCta?: Link | null
@@ -98,13 +99,15 @@ export type DrupalProduct = NodeCommonFields & {
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
   deploymentOptions?: string[] | null
-  keyCapabilities?: DrupalParagraph[] | null
+  // Aliased from keyCapabilities — see node-by-path.ts TODO(webcms).
+  productCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
 }
 
+// missionImpact is intentionally absent on Service & Solution — see the
+// TODO(webcms) note in lib/queries/node-by-path.ts.
 export type DrupalService = NodeCommonFields & {
   __typename: "NodeService"
-  missionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
@@ -112,7 +115,6 @@ export type DrupalService = NodeCommonFields & {
 
 export type DrupalSolution = NodeCommonFields & {
   __typename: "NodeSolution"
-  missionImpact?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
   outcomes?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
@@ -129,16 +131,10 @@ export type DrupalResource = NodeCommonFields & {
   resourceType?: TaxonomyTermRef | string | null
 }
 
-export type SmartDate = {
-  value?: string | null
-  endValue?: string | null
-  timezone?: string | null
-  rrule?: number | null
-}
-
+// TODO(webcms): NodeEvent's smart_date field is not exposed by
+// graphql_compose. Restore SmartDate + eventDate once the field is wired.
 export type DrupalEvent = NodeCommonFields & {
   __typename: "NodeEvent"
-  eventDate?: SmartDate | null
   eventType?: TaxonomyTermRef | string | null
 }
 
@@ -171,12 +167,11 @@ export type DrupalPerson = {
   showInDirectory?: boolean | null
   metaDescription?: string | null
   seoTitle?: string | null
-  socialImage?: Image | null
+  socialImage?: DrupalMedia | null
   summary?: ProcessedText | null
 }
 
 export type DrupalNode =
-  | DrupalPage
   | DrupalArticle
   | DrupalProduct
   | DrupalService
@@ -216,7 +211,7 @@ export type ParagraphCapability = {
   capabilityTitle?: string | null
   capabilityDescription?: ProcessedText | null
   missionBenefit?: string | null
-  icon?: Image | null
+  icon?: DrupalMedia | null
 }
 
 export type ParagraphUseCase = {
@@ -239,7 +234,7 @@ export type ParagraphFeature = {
   __typename: "ParagraphPFeature"
   title?: string | null
   body?: ProcessedText | null
-  icon?: Image | null
+  icon?: DrupalMedia | null
 }
 
 export type ParagraphStat = {
@@ -259,18 +254,18 @@ export type ParagraphTextImage = {
   __typename: "ParagraphPTextImage"
   title?: string | null
   body?: ProcessedText | null
-  media?: Image | null
+  media?: DrupalMedia | null
 }
 
 export type ParagraphImageGallery = {
   __typename: "ParagraphPImageGallery"
   title?: string | null
-  galleryImages?: Image[] | null
+  galleryImages?: DrupalMedia[] | null
 }
 
 export type ParagraphLogoWall = {
   __typename: "ParagraphPLogoWall"
-  logos?: Image[] | null
+  logos?: DrupalMedia[] | null
 }
 
 export type ParagraphFaqItem = {
