@@ -97,8 +97,7 @@ export type DrupalPage = NodeCommonFields & {
 
 export type DrupalProduct = NodeCommonFields & {
   __typename: "NodeProduct"
-  // Aliased from missionImpact — see node-by-path.ts TODO(webcms).
-  productMissionImpact?: ProcessedText | null
+  missionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
   deploymentOptions?: string[] | null
