@@ -20,10 +20,10 @@ export function Product({ node }: { node: DrupalProduct }) {
       <MetadataChips label="Sectors" terms={node.targetSectors} />
       <MetadataChips label="Industries" terms={node.industries} />
 
-      {node.productMissionImpact?.processed ? (
+      {node.missionImpact?.processed ? (
         <Section title="Mission impact">
           <RawHtml
-            html={node.productMissionImpact.processed}
+            html={node.missionImpact.processed}
             className="prose max-w-none text-lg"
           />
         </Section>

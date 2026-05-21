@@ -141,10 +141,7 @@ const NODE_BY_PATH_QUERY = `
           ... on NodeProduct {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
-            # TODO(webcms): NodeProduct.missionImpact is Text! while
-            # NodeService/NodeSolution.missionImpact is Text. Aliased here to
-            # avoid the field-merge conflict until the bundles agree.
-            productMissionImpact: missionImpact { processed }
+            missionImpact { processed }
             defenseRelevance { processed }
             sovereigntyFeatures { processed }
             deploymentOptions
