@@ -52,12 +52,6 @@ export type RelatedNode = {
 
 // ── Node types — existing ───────────────────────────────────────────────────
 
-// TODO(webcms): NodeBasicPage (basic_page bundle) is not exposed by
-// graphql_compose. Restore DrupalPage once the schema gap is closed.
-
-// TODO(webcms): NodeArticle does not expose summary, metaDescription,
-// or seoTitle via graphql_compose. Add them back once the schema gap is
-// closed.
 export type DrupalArticle = {
   __typename: "NodeArticle"
   id: string
@@ -70,6 +64,10 @@ export type DrupalArticle = {
     time: string
   }
   image?: Image | null
+  summary?: ProcessedText | null
+  metaDescription?: string | null
+  seoTitle?: string | null
+  breadcrumbLabel?: string | null
 }
 
 // ── Node types — new (8 unwired) ────────────────────────────────────────────
@@ -93,21 +91,24 @@ export type NodeCommonFields = {
   targetSectors?: TaxonomyTermRef[] | null
 }
 
+export type DrupalPage = NodeCommonFields & {
+  __typename: "NodeBasicPage"
+}
+
 export type DrupalProduct = NodeCommonFields & {
   __typename: "NodeProduct"
-  missionImpact?: ProcessedText | null
+  // Aliased from missionImpact — see node-by-path.ts TODO(webcms).
+  productMissionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
   deploymentOptions?: string[] | null
-  // Aliased from keyCapabilities — see node-by-path.ts TODO(webcms).
-  productCapabilities?: DrupalParagraph[] | null
+  keyCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
 }
 
-// missionImpact is intentionally absent on Service & Solution — see the
-// TODO(webcms) note in lib/queries/node-by-path.ts.
 export type DrupalService = NodeCommonFields & {
   __typename: "NodeService"
+  missionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
@@ -115,6 +116,7 @@ export type DrupalService = NodeCommonFields & {
 
 export type DrupalSolution = NodeCommonFields & {
   __typename: "NodeSolution"
+  missionImpact?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
   outcomes?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
@@ -131,11 +133,23 @@ export type DrupalResource = NodeCommonFields & {
   resourceType?: TaxonomyTermRef | string | null
 }
 
-// TODO(webcms): NodeEvent's smart_date field is not exposed by
-// graphql_compose. Restore SmartDate + eventDate once the field is wired.
+// DateTime is an OBJECT type in graphql_compose; we only select { time }
+// (ISO 8601 string). Sub-selection is required even when the value is null.
+export type DateTimeRef = { time: string } | null
+
+export type SmartDate = {
+  value: DateTimeRef
+  endValue: DateTimeRef
+  duration: number | null
+  timezone: string | null
+  rrule: number | null
+  rruleIndex: number | null
+}
+
 export type DrupalEvent = NodeCommonFields & {
   __typename: "NodeEvent"
   eventType?: TaxonomyTermRef | string | null
+  eventDate?: SmartDate | null
 }
 
 export type DrupalCareer = NodeCommonFields & {
@@ -173,6 +187,7 @@ export type DrupalPerson = {
 
 export type DrupalNode =
   | DrupalArticle
+  | DrupalPage
   | DrupalProduct
   | DrupalService
   | DrupalSolution

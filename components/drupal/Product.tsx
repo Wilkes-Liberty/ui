@@ -20,10 +20,10 @@ export function Product({ node }: { node: DrupalProduct }) {
       <MetadataChips label="Sectors" terms={node.targetSectors} />
       <MetadataChips label="Industries" terms={node.industries} />
 
-      {node.missionImpact?.processed ? (
+      {node.productMissionImpact?.processed ? (
         <Section title="Mission impact">
           <RawHtml
-            html={node.missionImpact.processed}
+            html={node.productMissionImpact.processed}
             className="prose max-w-none text-lg"
           />
         </Section>
@@ -31,10 +31,10 @@ export function Product({ node }: { node: DrupalProduct }) {
 
       <ProseBody body={node.body} />
 
-      {node.productCapabilities?.length ? (
+      {node.keyCapabilities?.length ? (
         <Section title="Key capabilities">
           <ul className="not-prose">
-            {node.productCapabilities.map((p, i) =>
+            {node.keyCapabilities.map((p, i) =>
               p.__typename === "ParagraphCapability" ? (
                 <CapabilityParagraph
                   key={i}

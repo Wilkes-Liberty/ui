@@ -72,8 +72,6 @@ const PARAGRAPH_FRAGMENTS = `
   }
 `
 
-// NodeCaseStudy lacks `personas` in graphql_compose, so personas is added
-// per-bundle below rather than baked into COMMON_NODE_FIELDS.
 const COMMON_NODE_FIELDS = `
   id
   status
@@ -114,44 +112,62 @@ const NODE_BY_PATH_QUERY = `
             body { processed }
             created { time }
             image { url width height alt }
-            # TODO(webcms): NodeArticle does not expose summary,
-            # metaDescription, or seoTitle via graphql_compose. Restore
-            # selections once the schema gap is closed.
+            summary { processed }
+            metaDescription
+            seoTitle
+            breadcrumbLabel
           }
-          # TODO(webcms): basic_page (NodeBasicPage) is not exposed by
-          # graphql_compose, so we cannot render basic pages here.
+          ... on NodeBasicPage {
+            id
+            status
+            title
+            path
+            body { processed }
+            summary { processed }
+            metaDescription
+            seoTitle
+            breadcrumbLabel
+            heroImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
+            socialImage {
+              __typename
+              ... on MediaImage { mediaImage { url width height alt } }
+            }
+            primaryCta { url title }
+            secondaryCta { url title }
+          }
           ... on NodeProduct {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
-            missionImpact { processed }
+            # TODO(webcms): NodeProduct.missionImpact is Text! while
+            # NodeService/NodeSolution.missionImpact is Text. Aliased here to
+            # avoid the field-merge conflict until the bundles agree.
+            productMissionImpact: missionImpact { processed }
             defenseRelevance { processed }
             sovereigntyFeatures { processed }
             deploymentOptions
             targetSectors { ... on TermInterface { name } }
-            # TODO(webcms): NodeProduct.keyCapabilities is [ParagraphUnion!]!
-            # but Service/Solution have [ParagraphUnion!]. Aliased here to
-            # avoid the field-merge conflict until the bundles agree.
-            productCapabilities: keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
+            keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeService {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
-            # TODO(webcms): missionImpact is declared NON_NULL in the
-            # schema but the DB allows null, causing the resolver to
-            # throw Internal server error. Drop until the schema or data
-            # is reconciled.
+            missionImpact { processed }
             defenseRelevance { processed }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeSolution {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
-            # TODO(webcms): see NodeService missionImpact note above.
+            missionImpact { processed }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
             outcomes { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeCaseStudy {
             ${COMMON_NODE_FIELDS}
+            ${PERSONAS_FIELD}
             targetSectors { ... on TermInterface { name } }
             outcomes { ${PARAGRAPH_FRAGMENTS} }
           }
@@ -163,8 +179,14 @@ const NODE_BY_PATH_QUERY = `
           ... on NodeEvent {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
-            # TODO(webcms): expose the smart_date field on NodeEvent via
-            # graphql_compose. The schema currently has no eventDate field.
+            eventDate {
+              value { time }
+              endValue { time }
+              duration
+              timezone
+              rrule
+              rruleIndex
+            }
             eventType { ... on TermInterface { name } }
           }
           ... on NodeCareer {

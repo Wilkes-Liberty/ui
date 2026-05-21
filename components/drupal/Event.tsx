@@ -1,7 +1,9 @@
 import { CtaLinks } from "@/components/drupal/shared/CtaLinks"
 import { NodeHero } from "@/components/drupal/shared/NodeHero"
 import { ProseBody } from "@/components/drupal/shared/ProseBody"
+import { Section } from "@/components/drupal/shared/Section"
 import { mediaToImage } from "@/lib/drupal-media"
+import { formatDate } from "@/lib/utils"
 import type { DrupalEvent } from "@/types"
 
 function eventTypeLabel(value: DrupalEvent["eventType"]): string | null {
@@ -10,11 +12,19 @@ function eventTypeLabel(value: DrupalEvent["eventType"]): string | null {
   return value.name ?? null
 }
 
-// TODO(webcms): event date display is hidden because graphql_compose
-// does not currently expose the smart_date field. Restore the date
-// section once the schema gap is closed.
+function eventDateRange(eventDate: DrupalEvent["eventDate"]): string | null {
+  const startIso = eventDate?.value?.time
+  if (!startIso) return null
+  const start = formatDate(startIso)
+  const endIso = eventDate?.endValue?.time
+  if (!endIso) return start
+  const end = formatDate(endIso)
+  return start === end ? start : `${start} – ${end}`
+}
+
 export function Event({ node }: { node: DrupalEvent }) {
   const eventTypeText = eventTypeLabel(node.eventType)
+  const dateRange = eventDateRange(node.eventDate)
   return (
     <article>
       <NodeHero
@@ -23,6 +33,12 @@ export function Event({ node }: { node: DrupalEvent }) {
         summary={node.summary}
         heroImage={mediaToImage(node.heroImage)}
       />
+
+      {dateRange ? (
+        <Section title="When">
+          <p className="text-lg">{dateRange}</p>
+        </Section>
+      ) : null}
 
       <ProseBody body={node.body} />
 
