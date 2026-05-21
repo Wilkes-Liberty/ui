@@ -108,15 +108,30 @@ If you see build errors about missing OAuth credentials, the pattern above is th
 
 ## Branch & Deployment Flow
 
-**Branch from `staging`, never directly from `main`** (same rule as webcms).
+**Branch from `master`, target `master` in PRs** (same rule across all
+three repos — `infra`, `webcms`, `ui`).
 
 ```
-feature/*  →  staging  →  (review)  →  main  (promoted by lead)
+feature/*  →  PR  →  master
+                      │
+                      │  .github/workflows/sync-branches.yml
+                      │  fast-forwards master into staging + development:
+                      ▼
+                staging          development
+                (auto-deploy)    (no deploy; WIP integration)
 ```
 
-Production deploys of the UI are **not** triggered from this repo in isolation:
-- The `infra/` Ansible role `wl-vps-ui` checks out the `main` branch (or the branch under test), runs `npm ci && npm run build`, and syncs the output to the VPS.
-- See `infra/ansible/roles/wl-vps-ui/` and the VPS playbook.
+- `staging` and `development` are downstream mirrors of `master`. Never
+  push to them directly; the sync workflow handles it.
+- The push to `staging` triggers `infra/deploy-staging.yml` (staging
+  Next.js container rebuilt on the on-prem server).
+
+Production deploys of the UI are **not** triggered from this repo in
+isolation:
+- The `infra/` Ansible role `wl-vps-ui` checks out `master` (or the
+  branch under test), runs `npm ci && npm run build`, and syncs the
+  output to the VPS.
+- See `infra/ansible/roles/wl-vps-ui/` and the VPS playbook (`make vps`).
 
 When opening a PR that depends on new Drupal data:
 - Explicitly list the required backend changes (content type, fields, GraphQL schema updates, revalidation config, consumer settings, etc.).
