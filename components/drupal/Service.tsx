@@ -19,6 +19,15 @@ export function Service({ node }: { node: DrupalService }) {
       />
       <MetadataChips label="Industries" terms={node.industries} />
 
+      {node.missionImpact?.processed ? (
+        <Section title="Mission impact">
+          <RawHtml
+            html={node.missionImpact.processed}
+            className="prose max-w-none text-lg"
+          />
+        </Section>
+      ) : null}
+
       <ProseBody body={node.body} />
 
       {node.keyCapabilities?.length ? (
