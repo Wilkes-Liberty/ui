@@ -48,25 +48,23 @@ export async function generateMetadata(
 }
 
 export async function generateStaticParams(): Promise<NodePageParams[]> {
-  // Fetch the paths for the first 50 articles and pages.
+  // Fetch the paths for the first 50 articles.
   // We'll fall back to on-demand generation for the rest.
   // During Docker builds Drupal is not running, so we catch and return []
   // — all paths are rendered on-demand at runtime instead.
+  // TODO(webcms): the basic_page bundle is not exposed by
+  // graphql_compose, so basic-page paths are not pre-rendered here.
   try {
     const data = await drupal.query<{
       nodeArticles: NodesPath
-      nodePages: NodesPath
     }>({
       query: `query {
         nodeArticles(first: 50) { nodes { path } }
-        nodePages(first: 50) { nodes { path } }
       }`,
     })
 
-    return [
-      ...(data?.nodeArticles?.nodes as { path: string }[]),
-      ...(data?.nodePages?.nodes as { path: string }[]),
-    ].map(({ path }) => ({ slug: path.split("/").filter(Boolean) }))
+    return (data?.nodeArticles?.nodes as { path: string }[])
+      .map(({ path }) => ({ slug: path.split("/").filter(Boolean) }))
   } catch {
     return []
   }

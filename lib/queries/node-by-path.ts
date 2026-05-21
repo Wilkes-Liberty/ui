@@ -72,6 +72,8 @@ const PARAGRAPH_FRAGMENTS = `
   }
 `
 
+// NodeCaseStudy lacks `personas` in graphql_compose, so personas is added
+// per-bundle below rather than baked into COMMON_NODE_FIELDS.
 const COMMON_NODE_FIELDS = `
   id
   status
@@ -93,8 +95,9 @@ const COMMON_NODE_FIELDS = `
   primaryCta { url title }
   secondaryCta { url title }
   industries { ... on TermInterface { name } }
-  personas { ... on TermInterface { name } }
 `
+
+const PERSONAS_FIELD = `personas { ... on TermInterface { name } }`
 
 const NODE_BY_PATH_QUERY = `
   query NodeByPath($path: String!) {
@@ -115,33 +118,35 @@ const NODE_BY_PATH_QUERY = `
             # metaDescription, or seoTitle via graphql_compose. Restore
             # selections once the schema gap is closed.
           }
-          ... on NodePage {
-            id
-            status
-            title
-            path
-            body { processed }
-            metaDescription
-            seoTitle
-          }
+          # TODO(webcms): basic_page (NodeBasicPage) is not exposed by
+          # graphql_compose, so we cannot render basic pages here.
           ... on NodeProduct {
             ${COMMON_NODE_FIELDS}
+            ${PERSONAS_FIELD}
             missionImpact { processed }
             defenseRelevance { processed }
             sovereigntyFeatures { processed }
             deploymentOptions
             targetSectors { ... on TermInterface { name } }
-            keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
+            # TODO(webcms): NodeProduct.keyCapabilities is [ParagraphUnion!]!
+            # but Service/Solution have [ParagraphUnion!]. Aliased here to
+            # avoid the field-merge conflict until the bundles agree.
+            productCapabilities: keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeService {
             ${COMMON_NODE_FIELDS}
-            missionImpact { processed }
+            ${PERSONAS_FIELD}
+            # TODO(webcms): missionImpact is declared NON_NULL in the
+            # schema but the DB allows null, causing the resolver to
+            # throw Internal server error. Drop until the schema or data
+            # is reconciled.
             defenseRelevance { processed }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
           }
           ... on NodeSolution {
             ${COMMON_NODE_FIELDS}
-            missionImpact { processed }
+            ${PERSONAS_FIELD}
+            # TODO(webcms): see NodeService missionImpact note above.
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
             outcomes { ${PARAGRAPH_FRAGMENTS} }
           }
@@ -152,10 +157,12 @@ const NODE_BY_PATH_QUERY = `
           }
           ... on NodeResource {
             ${COMMON_NODE_FIELDS}
+            ${PERSONAS_FIELD}
             resourceType { ... on TermInterface { name } }
           }
           ... on NodeEvent {
             ${COMMON_NODE_FIELDS}
+            ${PERSONAS_FIELD}
             # TODO(webcms): expose the smart_date field on NodeEvent via
             # graphql_compose. The schema currently has no eventDate field.
             eventType { ... on TermInterface { name } }

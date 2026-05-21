@@ -52,16 +52,8 @@ export type RelatedNode = {
 
 // ── Node types — existing ───────────────────────────────────────────────────
 
-export type DrupalPage = {
-  __typename: "NodePage"
-  id: string
-  status: boolean
-  title: string
-  path: string
-  body?: ProcessedText | null
-  metaDescription?: string | null
-  seoTitle?: string | null
-}
+// TODO(webcms): NodeBasicPage (basic_page bundle) is not exposed by
+// graphql_compose. Restore DrupalPage once the schema gap is closed.
 
 // TODO(webcms): NodeArticle does not expose summary, metaDescription,
 // or seoTitle via graphql_compose. Add them back once the schema gap is
@@ -107,13 +99,15 @@ export type DrupalProduct = NodeCommonFields & {
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
   deploymentOptions?: string[] | null
-  keyCapabilities?: DrupalParagraph[] | null
+  // Aliased from keyCapabilities — see node-by-path.ts TODO(webcms).
+  productCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
 }
 
+// missionImpact is intentionally absent on Service & Solution — see the
+// TODO(webcms) note in lib/queries/node-by-path.ts.
 export type DrupalService = NodeCommonFields & {
   __typename: "NodeService"
-  missionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
@@ -121,7 +115,6 @@ export type DrupalService = NodeCommonFields & {
 
 export type DrupalSolution = NodeCommonFields & {
   __typename: "NodeSolution"
-  missionImpact?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
   outcomes?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
@@ -179,7 +172,6 @@ export type DrupalPerson = {
 }
 
 export type DrupalNode =
-  | DrupalPage
   | DrupalArticle
   | DrupalProduct
   | DrupalService

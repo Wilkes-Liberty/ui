@@ -31,10 +31,10 @@ export function Product({ node }: { node: DrupalProduct }) {
 
       <ProseBody body={node.body} />
 
-      {node.keyCapabilities?.length ? (
+      {node.productCapabilities?.length ? (
         <Section title="Key capabilities">
           <ul className="not-prose">
-            {node.keyCapabilities.map((p, i) =>
+            {node.productCapabilities.map((p, i) =>
               p.__typename === "ParagraphCapability" ? (
                 <CapabilityParagraph
                   key={i}
