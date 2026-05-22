@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { NodeListing } from "@/components/drupal/shared/NodeListing"
+import { ProductTeaser } from "@/components/drupal/ProductTeaser"
 import { getNodeListing } from "@/lib/queries/node-listing"
 
 export const dynamic = "force-dynamic"
@@ -12,13 +12,23 @@ export const metadata: Metadata = {
 
 export default async function ProductsIndex() {
   const { nodes } = await getNodeListing("product")
+
   return (
-    <NodeListing
-      title="Products."
-      intro="Sovereign platforms — deployable on-premises, in private cloud, hybrid, or air-gapped."
-      eyebrow="Product"
-      nodes={nodes}
-      emptyMessage="No products published yet."
-    />
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-3">Products.</h1>
+      <p className="text-xl text-gray-600 max-w-2xl mb-10">
+        Sovereign platforms — deployable on-premises, in private cloud, hybrid, or air-gapped.
+      </p>
+
+      {nodes.length === 0 ? (
+        <p className="text-gray-500">No products published yet.</p>
+      ) : (
+        <div>
+          {nodes.map((node) => (
+            <ProductTeaser key={node.id} node={node} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

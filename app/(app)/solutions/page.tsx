@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { NodeListing } from "@/components/drupal/shared/NodeListing"
+import { SolutionTeaser } from "@/components/drupal/SolutionTeaser"
 import { getNodeListing } from "@/lib/queries/node-listing"
 
 export const dynamic = "force-dynamic"
@@ -11,13 +11,23 @@ export const metadata: Metadata = {
 
 export default async function SolutionsIndex() {
   const { nodes } = await getNodeListing("solution")
+
   return (
-    <NodeListing
-      title="Solutions."
-      intro="Integrated answers to mission-critical problems."
-      eyebrow="Solution"
-      nodes={nodes}
-      emptyMessage="No solutions published yet."
-    />
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-3">Solutions.</h1>
+      <p className="text-xl text-gray-600 max-w-2xl mb-10">
+        Integrated answers to mission-critical problems.
+      </p>
+
+      {nodes.length === 0 ? (
+        <p className="text-gray-500">No solutions published yet.</p>
+      ) : (
+        <div>
+          {nodes.map((node) => (
+            <SolutionTeaser key={node.id} node={node} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
