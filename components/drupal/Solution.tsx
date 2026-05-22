@@ -75,7 +75,7 @@ export function Solution({ node }: { node: DrupalSolution }) {
           <ul className="list-disc pl-5">
             {node.related.map((r, i) => (
               <li key={i}>
-                <a href={r.path} className="text-blue-700 hover:underline">
+                <a href={r.path ?? "#"} className="text-blue-700 hover:underline">
                   {r.title}
                 </a>
               </li>
