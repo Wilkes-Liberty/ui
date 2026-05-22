@@ -22,7 +22,14 @@ export function Solution({ node }: { node: DrupalSolution }) {
         summary={node.summary}
         heroImage={mediaToImage(node.heroImage)}
       />
-      <MetadataChips label="Industries" terms={node.industries} />
+
+      {/* Classification chips */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        <MetadataChips label="Platform" terms={node.platform} />
+        <MetadataChips label="Target Sectors" terms={node.targetSectors} />
+        <MetadataChips label="Industries" terms={node.industries} />
+        <MetadataChips label="Compliance" terms={node.compliance} />
+      </div>
 
       {node.missionImpact?.processed ? (
         <Section title="Mission impact">
@@ -58,6 +65,21 @@ export function Solution({ node }: { node: DrupalSolution }) {
                 />
               ) : null
             )}
+          </ul>
+        </Section>
+      ) : null}
+
+      {/* Related Products & Services that make up this Solution */}
+      {node.related?.length ? (
+        <Section title="What's included">
+          <ul className="list-disc pl-5">
+            {node.related.map((r, i) => (
+              <li key={i}>
+                <a href={r.path} className="text-blue-700 hover:underline">
+                  {r.title}
+                </a>
+              </li>
+            ))}
           </ul>
         </Section>
       ) : null}

@@ -17,7 +17,12 @@ export function Service({ node }: { node: DrupalService }) {
         summary={node.summary}
         heroImage={mediaToImage(node.heroImage)}
       />
-      <MetadataChips label="Industries" terms={node.industries} />
+      <div className="flex flex-wrap gap-2 mb-6">
+        <MetadataChips label="Platform" terms={node.platform} />
+        <MetadataChips label="Industries" terms={node.industries} />
+        <MetadataChips label="Target Sectors" terms={node.targetSectors} />
+        <MetadataChips label="Compliance" terms={node.compliance} />
+      </div>
 
       {node.missionImpact?.processed ? (
         <Section title="Mission impact">
@@ -51,6 +56,20 @@ export function Service({ node }: { node: DrupalService }) {
             html={node.defenseRelevance.processed}
             className="prose max-w-none"
           />
+        </Section>
+      ) : null}
+
+      {node.related?.length ? (
+        <Section title="Related products">
+          <ul className="list-disc pl-5">
+            {node.related.map((r, i) => (
+              <li key={i}>
+                <a href={r.path} className="text-blue-700 hover:underline">
+                  {r.title}
+                </a>
+              </li>
+            ))}
+          </ul>
         </Section>
       ) : null}
 
