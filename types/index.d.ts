@@ -46,7 +46,7 @@ export type TaxonomyTermRef = {
 export type RelatedNode = {
   __typename?: string
   title?: string | null
-  path?: string | null
+  path?: string
   summary?: ProcessedText | null
 }
 
