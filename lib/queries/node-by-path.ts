@@ -146,7 +146,11 @@ const NODE_BY_PATH_QUERY = `
             sovereigntyFeatures { processed }
             deploymentOptions
             targetSectors { ... on TermInterface { name } }
+            industries { ... on TermInterface { name } }
+            compliance { ... on TermInterface { name } }
+            platform { ... on TermInterface { name } }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
+            related { ... on NodeInterface { __typename id title path } }
           }
           ... on NodeService {
             ${COMMON_NODE_FIELDS}
@@ -154,6 +158,11 @@ const NODE_BY_PATH_QUERY = `
             missionImpact { processed }
             defenseRelevance { processed }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
+            targetSectors { ... on TermInterface { name } }
+            industries { ... on TermInterface { name } }
+            compliance { ... on TermInterface { name } }
+            platform { ... on TermInterface { name } }
+            related { ... on NodeInterface { __typename id title path } }
           }
           ... on NodeSolution {
             ${COMMON_NODE_FIELDS}
@@ -161,6 +170,11 @@ const NODE_BY_PATH_QUERY = `
             missionImpact { processed }
             keyCapabilities { ${PARAGRAPH_FRAGMENTS} }
             outcomes { ${PARAGRAPH_FRAGMENTS} }
+            related { ... on NodeInterface { __typename id title path } }
+            targetSectors { ... on TermInterface { name } }
+            industries { ... on TermInterface { name } }
+            compliance { ... on TermInterface { name } }
+            platform { ... on TermInterface { name } }
           }
           ... on NodeCaseStudy {
             ${COMMON_NODE_FIELDS}

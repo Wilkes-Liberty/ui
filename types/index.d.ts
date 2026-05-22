@@ -101,6 +101,10 @@ export type DrupalProduct = NodeCommonFields & {
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
   deploymentOptions?: string[] | null
+  targetSectors?: Array<{ name: string }> | null
+  industries?: Array<{ name: string }> | null
+  compliance?: Array<{ name: string }> | null
+  platform?: Array<{ name: string }> | null
   keyCapabilities?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
 }
@@ -110,6 +114,10 @@ export type DrupalService = NodeCommonFields & {
   missionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   keyCapabilities?: DrupalParagraph[] | null
+  targetSectors?: Array<{ name: string }> | null
+  industries?: Array<{ name: string }> | null
+  compliance?: Array<{ name: string }> | null
+  platform?: Array<{ name: string }> | null
   related?: RelatedNode[] | null
 }
 
@@ -119,6 +127,10 @@ export type DrupalSolution = NodeCommonFields & {
   keyCapabilities?: DrupalParagraph[] | null
   outcomes?: DrupalParagraph[] | null
   related?: RelatedNode[] | null
+  targetSectors?: Array<{ name: string }> | null
+  industries?: Array<{ name: string }> | null
+  compliance?: Array<{ name: string }> | null
+  platform?: Array<{ name: string }> | null
 }
 
 export type DrupalCaseStudy = NodeCommonFields & {

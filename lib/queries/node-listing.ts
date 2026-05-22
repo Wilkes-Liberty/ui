@@ -5,6 +5,7 @@ export type ListingNode = {
   title: string
   path: string
   summary?: { processed: string } | null
+  changed?: { timestamp: number } | null
 }
 
 export type ListingResult = {
@@ -40,6 +41,7 @@ export async function getNodeListing(
           title
           path
           summary { processed }
+          changed { timestamp }
         }
       }
     }
