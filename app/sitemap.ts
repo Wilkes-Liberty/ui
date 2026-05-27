@@ -8,7 +8,7 @@ const SITE_URL =
 const STATIC_ROUTES = [
   "/",
   "/contact",
-  "/products",
+  "/platforms",
   "/services",
   "/solutions",
   "/articles",
@@ -20,7 +20,7 @@ const STATIC_ROUTES = [
 ]
 
 const DYNAMIC_BUNDLES: ListingBundle[] = [
-  "product",
+  "platform",
   "service",
   "solution",
   "case_study",
