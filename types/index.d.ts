@@ -95,8 +95,8 @@ export type DrupalPage = NodeCommonFields & {
   __typename: "NodeBasicPage"
 }
 
-export type DrupalProduct = NodeCommonFields & {
-  __typename: "NodeProduct"
+export type DrupalPlatform = NodeCommonFields & {
+  __typename: "NodePlatform"
   missionImpact?: ProcessedText | null
   defenseRelevance?: ProcessedText | null
   sovereigntyFeatures?: ProcessedText | null
@@ -199,7 +199,7 @@ export type DrupalPerson = {
 export type DrupalNode =
   | DrupalArticle
   | DrupalPage
-  | DrupalProduct
+  | DrupalPlatform
   | DrupalService
   | DrupalSolution
   | DrupalCaseStudy

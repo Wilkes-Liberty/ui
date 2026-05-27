@@ -138,7 +138,7 @@ const NODE_BY_PATH_QUERY = `
             primaryCta { url title }
             secondaryCta { url title }
           }
-          ... on NodeProduct {
+          ... on NodePlatform {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
             missionImpact { processed }

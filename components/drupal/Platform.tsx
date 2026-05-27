@@ -6,13 +6,13 @@ import { RawHtml } from "@/components/drupal/shared/RawHtml"
 import { Section } from "@/components/drupal/shared/Section"
 import { CapabilityParagraph } from "@/components/drupal/paragraphs/CapabilityParagraph"
 import { mediaToImage } from "@/lib/drupal-media"
-import type { DrupalProduct, ParagraphCapability } from "@/types"
+import type { DrupalPlatform, ParagraphCapability } from "@/types"
 
-export function Product({ node }: { node: DrupalProduct }) {
+export function Platform({ node }: { node: DrupalPlatform }) {
   return (
     <article>
       <NodeHero
-        eyebrow="Product"
+        eyebrow="Platform"
         title={node.title}
         summary={node.summary}
         heroImage={mediaToImage(node.heroImage)}

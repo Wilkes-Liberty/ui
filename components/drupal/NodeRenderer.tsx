@@ -4,7 +4,7 @@ import { Career } from "@/components/drupal/Career"
 import { CaseStudy } from "@/components/drupal/CaseStudy"
 import { Event } from "@/components/drupal/Event"
 import { Person } from "@/components/drupal/Person"
-import { Product } from "@/components/drupal/Product"
+import { Platform } from "@/components/drupal/Platform"
 import { Resource } from "@/components/drupal/Resource"
 import { Service } from "@/components/drupal/Service"
 import { Solution } from "@/components/drupal/Solution"
@@ -16,8 +16,8 @@ export function NodeRenderer({ node }: { node: DrupalNode }) {
       return <Article node={node} />
     case "NodeBasicPage":
       return <BasicPage node={node} />
-    case "NodeProduct":
-      return <Product node={node} />
+    case "NodePlatform":
+      return <Platform node={node} />
     case "NodeService":
       return <Service node={node} />
     case "NodeSolution":

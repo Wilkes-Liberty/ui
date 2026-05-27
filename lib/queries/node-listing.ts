@@ -15,7 +15,7 @@ export type ListingResult = {
 // One bundle == one root GraphQL field. graphql_compose pluralizes the
 // bundle name to camelCase, with one exception: person → nodePeople.
 const ROOT_FIELDS = {
-  product: "nodeProducts",
+  platform: "nodePlatforms",
   service: "nodeServices",
   solution: "nodeSolutions",
   case_study: "nodeCaseStudies",

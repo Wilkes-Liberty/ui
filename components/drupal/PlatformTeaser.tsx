@@ -2,12 +2,12 @@ import { Link } from "@/components/navigation/Link"
 import { drupalHtml } from "@/lib/drupal-html"
 import type { ListingNode } from "@/lib/queries/node-listing"
 
-interface ProductTeaserProps {
+interface PlatformTeaserProps {
   node: ListingNode
   eyebrow?: string
 }
 
-export function ProductTeaser({ node, eyebrow = "Product" }: ProductTeaserProps) {
+export function PlatformTeaser({ node, eyebrow = "Platform" }: PlatformTeaserProps) {
   const summaryText =
     typeof node.summary === "string"
       ? node.summary
