@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Solutions",
-  description: "Bundled solutions combining products, services, and outcomes.",
+  description: "Bundled solutions combining platforms, services, and outcomes.",
 }
 
 export default async function SolutionsIndex() {

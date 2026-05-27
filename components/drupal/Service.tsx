@@ -60,7 +60,7 @@ export function Service({ node }: { node: DrupalService }) {
       ) : null}
 
       {node.related?.length ? (
-        <Section title="Related products">
+        <Section title="Related platforms">
           <ul className="list-disc pl-5">
             {node.related.map((r, i) => (
               <li key={i}>

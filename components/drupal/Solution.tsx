@@ -69,7 +69,7 @@ export function Solution({ node }: { node: DrupalSolution }) {
         </Section>
       ) : null}
 
-      {/* Related Products & Services that make up this Solution */}
+      {/* Related Platforms & Services that make up this Solution */}
       {node.related?.length ? (
         <Section title="What's included">
           <ul className="list-disc pl-5">
