@@ -130,8 +130,8 @@ Copy `.env.example` to `.env.local` for local development. Never commit `.env.lo
 
 ```bash
 # .env.local for local development (pointing at DDEV Drupal)
-NEXT_PUBLIC_DRUPAL_BASE_URL=https://cms.ddev.site
-NEXT_IMAGE_DOMAIN=cms.ddev.site
+NEXT_PUBLIC_DRUPAL_BASE_URL=https://api.wilkesliberty.dev
+NEXT_IMAGE_DOMAIN=api.wilkesliberty.dev
 DRUPAL_CLIENT_ID=<from Drupal consumer config>
 DRUPAL_CLIENT_SECRET=<from Drupal consumer config>
 DRUPAL_REVALIDATE_SECRET=any-local-string
@@ -149,8 +149,8 @@ The `ui` fetches all content from Drupal via GraphQL and JSON:API. For local dev
 ### Option A: Use local DDEV Drupal (recommended for content work)
 
 1. Make sure the `webcms` repo is running: `cd ../webcms && ddev start`
-2. Get OAuth credentials from `https://cms.ddev.site/admin/config/services/consumer`
-3. Set `NEXT_PUBLIC_DRUPAL_BASE_URL=https://cms.ddev.site` in `.env.local`
+2. Get OAuth credentials from `https://api.wilkesliberty.dev/admin/config/services/consumer`
+3. Set `NEXT_PUBLIC_DRUPAL_BASE_URL=https://api.wilkesliberty.dev` in `.env.local`
 
 ### Option B: Point at staging Drupal (for frontend-only work)
 

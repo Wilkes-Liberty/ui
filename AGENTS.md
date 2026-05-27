@@ -81,6 +81,8 @@ Copy `.env.example` → `.env.local` (never commit the local file).
 - At runtime the docker-compose `.env` supplies the values and authenticated GraphQL queries work normally.
 - Public content (homepage, etc.) often bypasses the OAuth client entirely and POSTs directly to `/graphql` to keep builds resilient.
 
+**`DRUPAL_CLIENT_ID/SECRET` are NOT the Keycloak OIDC credentials.** They are Drupal's own OAuth2 consumer credentials, used by `ui` to authenticate API calls to Drupal. Drupal's separate OIDC trust relationship with Keycloak (so end users can SSO into Drupal admin) is wired entirely on the Drupal side via `DRUPAL_OIDC_CLIENT_ID`/`DRUPAL_OIDC_CLIENT_SECRET` env vars — `ui` never touches Keycloak directly. End users authenticate to `ui` via cookies/session set by Drupal-mediated flows.
+
 ## Connecting to Drupal (three common modes)
 
 1. **Local full-stack dev (recommended when touching content or API)**  
