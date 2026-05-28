@@ -199,6 +199,7 @@ export type DrupalPerson = {
 export type DrupalNode =
   | DrupalArticle
   | DrupalPage
+  | DrupalLandingPage
   | DrupalPlatform
   | DrupalService
   | DrupalSolution
@@ -323,9 +324,7 @@ export type DrupalParagraph =
   | ParagraphFaqGroup
   | ParagraphFaqItem
 
-export type DrupalLandingPage = {
+export type DrupalLandingPage = NodeCommonFields & {
   __typename: "NodeLandingPage"
-  id: string
-  title: string
-  components: DrupalParagraph[]
+  components?: DrupalParagraph[] | null
 }

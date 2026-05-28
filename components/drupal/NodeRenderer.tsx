@@ -3,6 +3,7 @@ import { BasicPage } from "@/components/drupal/BasicPage"
 import { Career } from "@/components/drupal/Career"
 import { CaseStudy } from "@/components/drupal/CaseStudy"
 import { Event } from "@/components/drupal/Event"
+import { LandingPage } from "@/components/drupal/LandingPage"
 import { Person } from "@/components/drupal/Person"
 import { Platform } from "@/components/drupal/Platform"
 import { Resource } from "@/components/drupal/Resource"
@@ -16,6 +17,8 @@ export function NodeRenderer({ node }: { node: DrupalNode }) {
       return <Article node={node} />
     case "NodeBasicPage":
       return <BasicPage node={node} />
+    case "NodeLandingPage":
+      return <LandingPage node={node} />
     case "NodePlatform":
       return <Platform node={node} />
     case "NodeService":

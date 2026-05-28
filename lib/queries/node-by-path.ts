@@ -138,6 +138,10 @@ const NODE_BY_PATH_QUERY = `
             primaryCta { url title }
             secondaryCta { url title }
           }
+          ... on NodeLandingPage {
+            ${COMMON_NODE_FIELDS}
+            components { ${PARAGRAPH_FRAGMENTS} }
+          }
           ... on NodePlatform {
             ${COMMON_NODE_FIELDS}
             ${PERSONAS_FIELD}
