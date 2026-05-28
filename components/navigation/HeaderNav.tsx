@@ -1,21 +1,20 @@
-import { Link } from "@/components/navigation/Link"
+import { getMenu, STATIC_MAIN_NAV } from "@/lib/queries/menu"
+import { NavBar } from "@/components/navigation/NavBar"
 
-export function HeaderNav() {
+/**
+ * HeaderNav — async Server Component.
+ *
+ * Fetches the main navigation menu from Drupal via graphql_compose_menus.
+ * Falls back to STATIC_MAIN_NAV if Drupal is unreachable (e.g. cold boot or
+ * Docker build time when runtime secrets are not yet injected).
+ */
+export async function HeaderNav() {
+  const menu = await getMenu("MAIN")
+  const items = menu?.items?.length ? menu.items : STATIC_MAIN_NAV
+
   return (
     <header>
-      <div className="container flex items-center justify-between py-6 mx-auto">
-        <Link href="/" className="text-2xl font-semibold no-underline">
-          Next.js for Drupal
-        </Link>
-        <Link
-          href="https://next-drupal.org/docs"
-          target="_blank"
-          rel="external"
-          className="hover:text-blue-600"
-        >
-          Read the docs
-        </Link>
-      </div>
+      <NavBar items={items} />
     </header>
   )
 }
