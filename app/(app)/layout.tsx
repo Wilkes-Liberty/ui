@@ -1,4 +1,5 @@
 import { DraftAlert } from "@/components/misc/DraftAlert"
+import { FooterNav } from "@/components/navigation/FooterNav"
 import { HeaderNav } from "@/components/navigation/HeaderNav"
 import type { ReactNode } from "react"
 
@@ -11,6 +12,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <div className="max-w-screen-md px-6 mx-auto">
         <main className="py-10">{children}</main>
       </div>
+      {/* FooterNav is full-width — lives outside the content-width container */}
+      <FooterNav />
     </>
   )
 }
