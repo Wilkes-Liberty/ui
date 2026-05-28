@@ -296,7 +296,7 @@ export const STATIC_MAIN_NAV: MenuItem[] = [
       },
       {
         id: "static-intelligence",
-        title: "Intelligence & Insights Services",
+        title: "Intelligence & Actionable Insights",
         url: "/services/intelligence-actionable-insights",
         internal: true,
         expanded: false,
